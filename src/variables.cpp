@@ -1,8 +1,8 @@
 #include "variables.hpp"
 
 // Motor groups - 5, 6, 7, 8, 9, 10
-pros::MotorGroup ldrive({11, -13, -12}, pros::v5::MotorGears::blue);
-pros::MotorGroup rdrive({18, 19, -20}, pros::v5::MotorGears::blue);
+pros::MotorGroup ldrive({ -13, -12}, pros::v5::MotorGears::blue);
+pros::MotorGroup rdrive({19, 20}, pros::v5::MotorGears::blue);
 
 // Inertial sensor
 pros::Imu imu(17);
