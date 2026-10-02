@@ -10,5 +10,5 @@ void getTouched(){
     updateScreen = true;
 
     currentScene.touchFunction(status);
-    
+     // 
 }
