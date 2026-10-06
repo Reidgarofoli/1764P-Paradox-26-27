@@ -243,11 +243,16 @@ void opcontrol() {
         chassis.arcade(leftY, rightX, true, 0.6);
     
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-            cascade.move(127);
+            winch.get_position();
+            if (winch.get_position() > 2000) {
+                cascade.brake();
+            } else {
+                cascade.move(127);
+            }
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
             winch.get_position();
             if (winch.get_position() < 360) {
-                cascade.move(0);
+                cascade.brake();
             } else {
                 cascade.move(-127);
             }
