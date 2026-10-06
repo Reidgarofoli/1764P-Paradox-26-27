@@ -12,7 +12,7 @@ extern lemlib::Drivetrain drivetrain;
 extern lemlib::TrackingWheel left_tracking;
 extern lemlib::TrackingWheel right_tracking;
 extern lemlib::OdomSensors sensors;
-
+extern pros::Rotation winch;
 
 
 // PID controllers
@@ -40,8 +40,14 @@ extern pros::adi::Led rightLEDStrip;
 extern pros::Motor bottomIntake;
 extern pros::Motor topIntake;
 
+// Cascade
+extern pros::MotorGroup cascade;
 
+// Arm
+extern pros::MotorGroup arm;
 
+//Wrist
+extern pros::Motor wrist;
 
 extern bool updateScreen;
 extern int updateDelay;

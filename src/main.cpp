@@ -241,10 +241,33 @@ void opcontrol() {
 
         // move the robot
         chassis.arcade(leftY, rightX, true, 0.6);
+    
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+            cascade.move(127);
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+            winch.get_position();
+            if (winch.get_position() < 360) {
+                cascade.move(0);
+            } else {
+                cascade.move(-127);
+            }
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+            arm.move(127);
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            arm.move(-127);
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+            wrist.move(127);
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            wrist.move(-127);
+        } else {
+            cascade.move(0);
+            arm.move(0);
+            wrist.move(0);
+            
+        }
 
 
-
-
+    
 
         pros::delay(25); // Run for 20 ms then update
     }

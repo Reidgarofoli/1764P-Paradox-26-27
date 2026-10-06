@@ -15,6 +15,17 @@ lemlib::Drivetrain drivetrain(&ldrive, // left motor group
                               450, // drivetrain rpm is 450
                               2 // horizontal drift is 2 (for now)
 );
+//Cascade
+pros::MotorGroup cascade({3, -4}, pros::v5::MotorGears::blue); 
+
+//Arm
+pros::MotorGroup arm({-1, 2}, pros::v5::MotorGears::green);
+
+//Wrist
+pros::Motor wrist(11, pros::v5::MotorGears::green);
+
+//rotation sensor on winch
+pros::Rotation winch(9); 
 
 // Left tracking wheel
 lemlib::TrackingWheel left_tracking(
