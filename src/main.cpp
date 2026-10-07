@@ -8,7 +8,7 @@
 #include <fstream>
 #include <string>
 
-
+lemlib::PID winchPID(0.005, 0, 0, 10000, false); // PID for winch control
 
 void loadingScreenTask(){
     pros::delay(20);
@@ -175,13 +175,38 @@ void LightsTask(){
     }
 }
 
+void motorTaskFunc(){
+    while (true){
+
+        // winch controller
+        if (winchTarget != -1) {
+            int winchPos = winch.get_position();
+            int winchError = winchTarget - winchPos;
+            int winchOutput = winchPID.update(winchError);
+            // printf("winch pos: %d, target: %d, error: %d, output: %d\n", winchPos, winchTarget, winchError, winchOutput);
+            if (winchOutput > maxWinchUp) {
+                winchOutput = maxWinchUp;
+            } else if (winchOutput < maxWinchDown) {
+                winchOutput = maxWinchDown;
+            }
+            cascade.move(winchOutput);
+        } else {
+            cascade.brake();
+        }
+        pros::delay(20);
+    }
+}
+
 void initialize() {
     pros::Task loadingScreen(loadingScreenTask);
 	chassis.calibrate(true);
-    
+    wrist.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    cascade.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
     pros::Task updateScreen(updateScreenTask);
     pros::Task lights(LightsTask);
+    pros::Task motorTask(motorTaskFunc);
 
 
     pros::screen::touch_callback(getTouched, pros::E_TOUCH_PRESSED);
@@ -242,22 +267,16 @@ void opcontrol() {
         // move the robot
         chassis.arcade(leftY, rightX, true, 0.6);
     
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-            winch.get_position();
-            if (winch.get_position() > 2000) {
-                cascade.brake();
+        
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+           winch.get_position();
+            if (winch.get_position() > 1500) {
+                arm.get_position();
+            } if (arm.get_position() > 180) {
+                arm.brake();
             } else {
-                cascade.move(127);
+                arm.brake();
             }
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-            winch.get_position();
-            if (winch.get_position() < 360) {
-                cascade.brake();
-            } else {
-                cascade.move(-127);
-            }
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-            arm.move(127);
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             arm.move(-127);
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
@@ -265,10 +284,22 @@ void opcontrol() {
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
             wrist.move(-127);
         } else {
-            cascade.move(0);
-            arm.move(0);
-            wrist.move(0);
-            
+            arm.brake();
+            wrist.brake();
+        }
+
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+            winchTarget = upHeight;
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+            winchTarget = downHeight;
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+            winchTarget = midHeight;
+        }
+
+       if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+    clawState = !clawState;
+    claw.set_value(clawState);
+
         }
 
 

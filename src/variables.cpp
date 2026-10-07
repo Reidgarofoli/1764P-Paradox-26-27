@@ -2,10 +2,10 @@
 
 // Motor groups - 5, 6, 7, 8, 9, 10
 pros::MotorGroup ldrive({ -13, -12}, pros::v5::MotorGears::blue);
-pros::MotorGroup rdrive({19, 20}, pros::v5::MotorGears::blue);
+pros::MotorGroup rdrive({19, 17}, pros::v5::MotorGears::blue);
 
 // Inertial sensor
-pros::Imu imu(17);
+pros::Imu imu(8);
 
 // Drivetrain configuration
 lemlib::Drivetrain drivetrain(&ldrive, // left motor group
@@ -16,7 +16,7 @@ lemlib::Drivetrain drivetrain(&ldrive, // left motor group
                               2 // horizontal drift is 2 (for now)
 );
 //Cascade
-pros::MotorGroup cascade({3, -4}, pros::v5::MotorGears::blue); 
+pros::MotorGroup cascade({15, -16}, pros::v5::MotorGears::blue); 
 
 //Arm
 pros::MotorGroup arm({-1, 2}, pros::v5::MotorGears::green);
@@ -115,6 +115,10 @@ pros::adi::Led leftLEDStrip('d', 20);
 pros::adi::Led rightLEDStrip('e', 20);
 
 
+pros::adi::DigitalOut claw('f');
+bool clawState = false;
+
+
 // UI scene system
 Scene currentScene = {nullptr, nullptr};
 
@@ -124,3 +128,10 @@ int scoringSpeed = 127;
 
 std::array<float, 150> graph;
 std::array<float, 150> power;
+
+int winchTarget = downHeight;
+int upHeight = 324000;
+int midHeight = 180000;
+int downHeight = 36000;
+int maxWinchUp = 127;
+int maxWinchDown = -30;

@@ -36,6 +36,9 @@ extern pros::adi::Led leftLEDStrip;
 extern pros::adi::Led rightLEDStrip;
 
 
+extern pros::adi::DigitalOut claw;
+extern bool clawState;
+
 // Intake motors
 extern pros::Motor bottomIntake;
 extern pros::Motor topIntake;
@@ -84,3 +87,10 @@ ASSET(Graph_png);
 
 extern std::array<float, 150> graph;
 extern std::array<float, 150> power;
+
+extern int winchTarget;
+extern int upHeight;
+extern int midHeight;
+extern int downHeight;
+extern int maxWinchUp;
+extern int maxWinchDown;
