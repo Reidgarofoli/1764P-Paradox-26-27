@@ -89,8 +89,37 @@ extern std::array<float, 150> graph;
 extern std::array<float, 150> power;
 
 extern int winchTarget;
+extern int lastWinchTarget;
 extern int upHeight;
 extern int midHeight;
 extern int downHeight;
 extern int maxWinchUp;
 extern int maxWinchDown;
+
+extern int armTarget;
+extern int armDownHeight;
+extern int armUpHeight;
+
+extern int wristTarget;
+extern int wristDownHeight;
+extern int wristUpHeight;
+extern int wristHoldingHeight;
+
+extern int maxArmDown;
+extern int maxArmUp;
+extern int currentArmMax;
+
+extern int maxWristDown;
+extern int maxWristUp;
+extern int currentWristMax;
+
+enum ScoringState {
+    HIGHHIGH,
+    LOWHIGH,
+    MIDMID,
+    GOINGDOWN,
+    NORMAL,
+    DRIVING
+};
+
+extern ScoringState scoringState;

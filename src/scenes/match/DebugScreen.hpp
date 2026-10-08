@@ -50,7 +50,8 @@ inline void drawDebugScreen(){
     pros::screen::print(pros::E_TEXT_SMALL, 5, 52+24, "Y pos:%.2f", chassis.getPose().y);
     pros::screen::print(pros::E_TEXT_SMALL, 5, 64+24, "Angle:%.2f", chassis.getPose().theta);
 
-   pros::screen::print(pros::E_TEXT_SMALL, 5, 80+24, "rot:%d",   winch.get_position());
+    pros::screen::print(pros::E_TEXT_SMALL, 5, 80+24, "rot:%d",   winch.get_position());
+
 
     // pros::screen::print(pros::E_TEXT_SMALL, 5, 80+24, "l:%.2f",   ldist.get()/25.4);
     // pros::screen::print(pros::E_TEXT_SMALL, 5, 94+24, "r:%.2f",   rdist.get()/25.4);
@@ -81,6 +82,12 @@ inline void drawDebugScreen(){
     pros::screen::print(pros::E_TEXT_SMALL, 220, 64+24, "Auton:%d", currentAuton);
     // pros::screen::print(pros::E_TEXT_SMALL, 220, 76+24, "resetAngle:%f", resetAngel(0));
 
+
+    // Draw reset rotation sensor button
+    pros::screen::set_pen(0x323232);
+    pros::screen::draw_rect(342-30, 188, 472, 233);
+    pros::screen::print(pros::text_format_e_t::E_TEXT_LARGE, 355-30, 198, "RESET ROT");
+
     updateScreen = true;
 }
 
@@ -98,6 +105,9 @@ inline void touchFunctionDebugScreen(pros::screen_touch_status_s_t status){
         }
         if (getPressed(status, 342, 7, 130, 45)){
             currentScene = DebugScreenScene;
+        }
+        if (getPressed(status, 342-30, 188, 472, 233)){
+            winch.set_position(0);
         }
     }
 }

@@ -178,6 +178,47 @@ void LightsTask(){
 void motorTaskFunc(){
     while (true){
 
+        switch (scoringState) {
+            case ScoringState::HIGHHIGH:
+                winchTarget = upHeight;
+                armTarget = armUpHeight;
+                wristTarget = wristUpHeight;
+
+                currentWristMax = maxWristUp;
+                currentArmMax = maxArmUp;
+                break;
+            case ScoringState::LOWHIGH:
+                winchTarget = upHeight;
+                armTarget = armDownHeight;
+                wristTarget = wristDownHeight;
+
+                currentWristMax = maxWristUp;
+                currentArmMax = maxArmUp;
+                break;
+            case ScoringState::BACKHIGH:
+                // yet to be implemented
+                break;
+            case ScoringState::GOINGDOWN:
+                winchTarget = downHeight;
+                break;
+            case ScoringState::NORMAL:
+                winchTarget = downHeight;
+                armTarget = armDownHeight;
+                wristTarget = wristDownHeight;
+
+                currentWristMax = maxWristDown;
+                currentArmMax = maxArmDown;
+                break;
+            case ScoringState::DRIVING:
+                winchTarget = downHeight;
+                armTarget = armDownHeight;
+                wristTarget = wristHoldingHeight;
+
+                currentWristMax = maxWristDown;
+                currentArmMax = maxArmDown;
+                break; 
+        }
+
         // winch controller
         if (winchTarget != -1) {
             int winchPos = winch.get_position();
@@ -191,8 +232,13 @@ void motorTaskFunc(){
             }
             cascade.move(winchOutput);
         } else {
-            cascade.brake();
+            cascade.move(0);
         }
+
+        arm.move_absolute(armTarget, 200);
+        wrist.move_absolute(wristTarget, 200);
+
+
         pros::delay(20);
     }
 }
@@ -267,38 +313,29 @@ void opcontrol() {
         // move the robot
         chassis.arcade(leftY, rightX, true, 0.6);
     
-        
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-           winch.get_position();
-            if (winch.get_position() > 1500) {
-                arm.get_position();
-            } if (arm.get_position() > 180) {
-                arm.brake();
-            } else {
-                arm.brake();
-            }
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-            arm.move(-127);
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-            wrist.move(127);
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-            wrist.move(-127);
-        } else {
-            arm.brake();
-            wrist.brake();
+
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+            scoringState = ScoringState::HIGHHIGH;
+        }
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+            scoringState = ScoringState::LOWHIGH;
+        }
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
+            scoringState = ScoringState::BACKHIGH;
+        }
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
+            scoringState = ScoringState::GOINGDOWN;
+        }
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+            scoringState = ScoringState::NORMAL;
+        }
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+            scoringState = ScoringState::DRIVING;
         }
 
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-            winchTarget = upHeight;
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-            winchTarget = downHeight;
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-            winchTarget = midHeight;
-        }
-
-       if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-    clawState = !clawState;
-    claw.set_value(clawState);
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+            clawState = !clawState;
+            claw.set_value(clawState);
 
         }
 

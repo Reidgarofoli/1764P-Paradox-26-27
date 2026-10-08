@@ -31,8 +31,6 @@ inline void drawTempsScreen(){
 
     pros::screen::set_pen(0xffffff);
     pros::screen::set_eraser(0x151570);
-    pros::screen::print(pros::text_format_e_t::E_TEXT_MEDIUM, 20, 70, "Drive Motors");
-    pros::screen::print(pros::text_format_e_t::E_TEXT_MEDIUM, 20, 170, "Intake Motors");
     
     std::vector<std::string> overheatedMotorNames = {"ldrive[2]", "intake[1]"};
 
@@ -40,19 +38,22 @@ inline void drawTempsScreen(){
         if (ldrive.get_temperature(i) >= 50) pros::screen::set_pen(0xff0000);
         else if (ldrive.get_temperature(i) >= 50) pros::screen::set_pen(0xff7b00);
         else pros::screen::set_pen(0xffffff);
-        pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 90 + i*10, "ldrive[%d]: %f", i, ldrive.get_temperature(i));
+        pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 80 + i*10, "ldrive[%d]: %f", i, ldrive.get_temperature(i));
     }
     
     for (int i = 0; i < rdrive.get_temperature_all().size(); i++){
         if (rdrive.get_temperature(i) >= 50) pros::screen::set_pen(0xff0000);
         else if (rdrive.get_temperature(i) >= 50) pros::screen::set_pen(0xff7b00);
         else pros::screen::set_pen(0xffffff);
-        pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 130 + i*10, "rdrive[%d]: %f", i, rdrive.get_temperature(i));
+        pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 110 + i*10, "rdrive[%d]: %f", i, rdrive.get_temperature(i));
     }
    
 
-    // pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 190 + 0*10, "topIntake: %f", topIntake.get_temperature());
-    // pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 190 + 1*10, "botIntake: %f", bottomIntake.get_temperature());
+    pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 140 + 0*11, "winch 1: %f", cascade.get_temperature(0));
+    pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 140 + 1*11, "winch 2: %f", cascade.get_temperature(1));
+    pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 150 + 2*11, "arm 1: %f", arm.get_temperature(0));
+    pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 150 + 3*11, "arm 2: %f", arm.get_temperature(1));
+    pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 150 + 4*11, "wrist: %f", wrist.get_temperature());
 
     for (int i = 0; i < overheatedMotorNames.size(); i++){
         pros::screen::set_pen(0xff0000);

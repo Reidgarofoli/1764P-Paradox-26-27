@@ -22,10 +22,10 @@ pros::MotorGroup cascade({15, -16}, pros::v5::MotorGears::blue);
 pros::MotorGroup arm({-1, 2}, pros::v5::MotorGears::green);
 
 //Wrist
-pros::Motor wrist(11, pros::v5::MotorGears::green);
+pros::Motor wrist(-11, pros::v5::MotorGears::green);
 
 //rotation sensor on winch
-pros::Rotation winch(9); 
+pros::Rotation winch(-9); 
 
 // Left tracking wheel
 lemlib::TrackingWheel left_tracking(
@@ -129,9 +129,30 @@ int scoringSpeed = 127;
 std::array<float, 150> graph;
 std::array<float, 150> power;
 
-int winchTarget = downHeight;
-int upHeight = 324000;
-int midHeight = 180000;
-int downHeight = 36000;
+int winchTarget = -1;
+int lastWinchTarget = -1;
+int upHeight = 280000;
+int midHeight = 140000;
+int downHeight = 0;
 int maxWinchUp = 127;
 int maxWinchDown = -30;
+
+int armTarget = -1;
+int armDownHeight = 0;
+int armUpHeight = 800;
+
+int wristTarget = -1;
+int wristDownHeight = 0;
+int wristUpHeight = 800;
+int wristHoldingHeight = -300;
+
+
+int maxArmUp = 200;
+int maxArmDown = -35;
+int currentArmMax = 200;
+
+int maxWristUp = 200;
+int maxWristDown = -35;
+int currentWristMax = 200;
+
+ScoringState scoringState = NORMAL;
