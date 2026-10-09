@@ -195,7 +195,7 @@ void motorTaskFunc(){
                 currentWristMax = maxWristUp;
                 currentArmMax = maxArmUp;
                 break;
-            case ScoringState::BACKHIGH:
+            case ScoringState::MIDMID:
                 // yet to be implemented
                 break;
             case ScoringState::GOINGDOWN:
@@ -321,7 +321,7 @@ void opcontrol() {
             scoringState = ScoringState::LOWHIGH;
         }
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
-            scoringState = ScoringState::BACKHIGH;
+            scoringState = ScoringState::MIDMID;
         }
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
             scoringState = ScoringState::GOINGDOWN;

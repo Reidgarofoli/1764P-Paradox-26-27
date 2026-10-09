@@ -78,6 +78,23 @@ void runAuton(){
         switch (currentAuton){ // LEFT SIDE AUTONS
             case 0: // left 4
                 chassis.setPose(0,0,0);
+                clawState = true;//true means close claw, false means open claw
+                claw.set_value(clawState);
+                scoringState = ScoringState::DRIVING;
+                chassis.moveToPoint(0, 10, 1500, {.forwards=true}, false);
+                chassis.moveToPoint(0, -7, 1000, {.forwards=false}, false);
+                chassis.moveToPoint(0, 10, 1500, {.forwards=true}, false);
+                chassis.moveToPoint(0, -7, 1500, {.forwards=false}, false);
+                chassis.moveToPoint(0, 15, 1500, {.forwards=true}, false);
+                chassis.turnToHeading(270, 1000, {}, false);
+                scoringState = ScoringState::LOWHIGH;
+                pros::delay(500);
+                chassis.moveToPoint(-15, 15, 1500, {.forwards=true}, false);
+                clawState = false;
+                claw.set_value(clawState);
+                pros::delay(500);
+                chassis.moveToPoint(0, 15, 1500, {.forwards=false}, false);
+                scoringState = ScoringState::DRIVING;
                 break;
 
             case 1: // split

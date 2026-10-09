@@ -100,7 +100,7 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 
 // Game state variables
-int currentAuton = 2; // will only be changed in buttons.cpp
+int currentAuton = 0; // will only be changed in buttons.cpp
 char currentTeam = 'R'; // 'R' or 'B'
 char currentSide = 'L'; // 'R' or 'L'
 char colorMode = 'S';     // 'S', 'W', 'C', or 'R'
@@ -148,11 +148,11 @@ int wristHoldingHeight = -300;
 
 
 int maxArmUp = 200;
-int maxArmDown = -35;
+int maxArmDown = 35;
 int currentArmMax = 200;
 
 int maxWristUp = 200;
-int maxWristDown = -35;
+int maxWristDown = 35;
 int currentWristMax = 200;
 
 ScoringState scoringState = NORMAL;
