@@ -9,7 +9,7 @@ extern Scene TempsScreenScene;
 extern Scene DebugScreenScene;
 extern Scene HomeScreenScene;
 std::vector<std::string> leftAutonNames = {
-    "4 wing",
+    "3 alliance goal(right) ",
     "split",
     "7 sit",
     "7 wing",

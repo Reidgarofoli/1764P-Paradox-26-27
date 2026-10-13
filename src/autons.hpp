@@ -78,23 +78,20 @@ void runAuton(){
         switch (currentAuton){ // LEFT SIDE AUTONS
             case 0: // left 4
                 chassis.setPose(0,0,0);
-                clawState = true;//true means close claw, false means open claw
-                claw.set_value(clawState);
                 scoringState = ScoringState::DRIVING;
-                chassis.moveToPoint(0, 10, 1500, {.forwards=true}, false);
-                chassis.moveToPoint(0, -7, 1000, {.forwards=false}, false);
-                chassis.moveToPoint(0, 10, 1500, {.forwards=true}, false);
-                chassis.moveToPoint(0, -7, 1500, {.forwards=false}, false);
+                chassis.moveToPoint(0, 10, 1500, {.forwards=true, .minSpeed=30}, false);
+                chassis.moveToPoint(0, -7, 1000, {.forwards=false, .minSpeed=30}, false);
+                chassis.moveToPoint(0, 10, 1500, {.forwards=true, .minSpeed=30}, false);
+                chassis.moveToPoint(0, -7, 1500, {.forwards=false, .minSpeed=30}, false);
                 chassis.moveToPoint(0, 15, 1500, {.forwards=true}, false);
-                chassis.turnToHeading(270, 1000, {}, false);
-                scoringState = ScoringState::LOWHIGH;
-                pros::delay(500);
-                chassis.moveToPoint(-15, 15, 1500, {.forwards=true}, false);
-                clawState = false;
+                chassis.turnToHeading(90, 1000, {}, false);
+                chassis.moveToPose(17, 16, 90, 1500, {.forwards=true, .lead=0.1}, false);
+                scoringState = ScoringState::NORMAL;
+                pros::delay(300);
+                clawState = true;
                 claw.set_value(clawState);
                 pros::delay(500);
                 chassis.moveToPoint(0, 15, 1500, {.forwards=false}, false);
-                scoringState = ScoringState::DRIVING;
                 break;
 
             case 1: // split

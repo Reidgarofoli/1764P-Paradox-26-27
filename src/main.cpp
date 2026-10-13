@@ -177,26 +177,41 @@ void LightsTask(){
 
 void motorTaskFunc(){
     while (true){
-
         switch (scoringState) {
             case ScoringState::HIGHHIGH:
                 winchTarget = upHeight;
                 armTarget = armUpHeight;
-                wristTarget = wristUpHeight;
+                wristTarget = wristUpHeight*0.8;
 
-                currentWristMax = maxWristUp;
+                currentWristMax = maxWristDown;
                 currentArmMax = maxArmUp;
                 break;
             case ScoringState::LOWHIGH:
                 winchTarget = upHeight;
                 armTarget = armDownHeight;
                 wristTarget = wristDownHeight;
-
-                currentWristMax = maxWristUp;
-                currentArmMax = maxArmUp;
+            
+                if (lastScoringState == ScoringState::HIGHHIGH || lastScoringState == ScoringState::MIDMID) {
+                    currentWristMax = maxWristDown;
+                    currentArmMax = maxArmDown;
+                } else {
+                    currentWristMax = maxWristUp;
+                    currentArmMax = maxArmUp;
+                }
                 break;
             case ScoringState::MIDMID:
                 // yet to be implemented
+                winchTarget = upHeight/2;
+                armTarget = armUpHeight/2;
+                wristTarget = wristUpHeight*0.8/2;
+
+                if (lastScoringState == ScoringState::HIGHHIGH) {
+                    currentWristMax = maxWristDown;
+                    currentArmMax = maxArmDown/3;
+                } else  {
+                    currentWristMax = maxWristUp;
+                    currentArmMax = maxArmUp;
+                }
                 break;
             case ScoringState::GOINGDOWN:
                 winchTarget = downHeight;
@@ -219,6 +234,8 @@ void motorTaskFunc(){
                 break; 
         }
 
+        lastScoringState = scoringState;
+
         // winch controller
         if (winchTarget != -1) {
             int winchPos = winch.get_position();
@@ -235,8 +252,8 @@ void motorTaskFunc(){
             cascade.move(0);
         }
 
-        arm.move_absolute(armTarget, 200);
-        wrist.move_absolute(wristTarget, 200);
+        arm.move_absolute(armTarget, currentArmMax);
+        wrist.move_absolute(wristTarget, currentWristMax);
 
 
         pros::delay(20);
@@ -249,6 +266,7 @@ void initialize() {
     wrist.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     cascade.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    winch.set_position(0);
 
     pros::Task updateScreen(updateScreenTask);
     pros::Task lights(LightsTask);

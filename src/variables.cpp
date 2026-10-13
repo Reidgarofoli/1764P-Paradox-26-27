@@ -115,7 +115,7 @@ pros::adi::Led leftLEDStrip('d', 20);
 pros::adi::Led rightLEDStrip('e', 20);
 
 
-pros::adi::DigitalOut claw('f');
+pros::adi::DigitalOut claw(6);
 bool clawState = false;
 
 
@@ -131,11 +131,11 @@ std::array<float, 150> power;
 
 int winchTarget = -1;
 int lastWinchTarget = -1;
-int upHeight = 280000;
+int upHeight = 415000;
 int midHeight = 140000;
 int downHeight = 0;
 int maxWinchUp = 127;
-int maxWinchDown = -30;
+int maxWinchDown = -60;
 
 int armTarget = -1;
 int armDownHeight = 0;
@@ -147,12 +147,13 @@ int wristUpHeight = 800;
 int wristHoldingHeight = -300;
 
 
-int maxArmUp = 200;
-int maxArmDown = 35;
+int maxArmUp = 100;
+int maxArmDown = 30;
 int currentArmMax = 200;
 
-int maxWristUp = 200;
-int maxWristDown = 35;
+int maxWristUp = 100;
+int maxWristDown = 25;
 int currentWristMax = 200;
 
 ScoringState scoringState = NORMAL;
+ScoringState lastScoringState = NORMAL;

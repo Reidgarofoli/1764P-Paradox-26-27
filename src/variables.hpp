@@ -123,3 +123,4 @@ enum ScoringState {
 };
 
 extern ScoringState scoringState;
+extern ScoringState lastScoringState;
