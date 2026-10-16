@@ -133,7 +133,7 @@ std::array<float, 150> power;
 int winchTarget = -1;
 int lastWinchTarget = -1;
 int upHeight = 415000;
-int midHeight = 160000;
+int midHeight = 180000;
 int winchFirstAutonHeight = 103000;
 int downHeight = 0;
 int maxWinchUp = 127;

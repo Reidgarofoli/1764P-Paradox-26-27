@@ -9,27 +9,23 @@ extern Scene TempsScreenScene;
 extern Scene DebugScreenScene;
 extern Scene HomeScreenScene;
 std::vector<std::string> leftAutonNames = {
-    "left 3 ",
-    "dont hit this",
-    "dont hit this",
-    "dont hit this",
+    "NEAR 2 ",
+    "NEAR preload",
 };
 ScrollableList leftAutonList = {
     0,
     0
 };
 std::vector<std::string> rightAutonNames = {
-    "right 3",
-    "dont hit this",
-    "dont hit this",
-    "dont hit this",
+    "FAR 2",
+    "FAR preload",
 };
 ScrollableList rightAutonList = {
     0,
     -1
 };
 std::vector<std::string> skillsAutonNames = {
-    "1st bad one",
+    "2 then mid",
     "awp skills start",
     "u better not use"
 };

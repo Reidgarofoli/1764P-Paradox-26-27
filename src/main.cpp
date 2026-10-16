@@ -201,7 +201,7 @@ void motorTaskFunc(){
                 break;
             case ScoringState::MIDMID:
                 // yet to be implemented
-                winchTarget = upHeight/2;
+                winchTarget = upHeight/1.8;
                 armTarget = armUpHeight/2;
                 wristTarget = wristUpHeight*0.8/2;
 
