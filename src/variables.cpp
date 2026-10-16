@@ -1,7 +1,7 @@
 #include "variables.hpp"
 
 // Motor groups - 5, 6, 7, 8, 9, 10
-pros::MotorGroup ldrive({ -13, -12}, pros::v5::MotorGears::blue);
+pros::MotorGroup ldrive({ -13, -5}, pros::v5::MotorGears::blue);
 pros::MotorGroup rdrive({19, 17}, pros::v5::MotorGears::blue);
 
 // Inertial sensor
@@ -16,10 +16,10 @@ lemlib::Drivetrain drivetrain(&ldrive, // left motor group
                               2 // horizontal drift is 2 (for now)
 );
 //Cascade
-pros::MotorGroup cascade({15, -16}, pros::v5::MotorGears::blue); 
+pros::MotorGroup cascade({15, -7}, pros::v5::MotorGears::blue); 
 
 //Arm
-pros::MotorGroup arm({-1, 2}, pros::v5::MotorGears::green);
+pros::MotorGroup arm({-1, 3}, pros::v5::MotorGears::green);
 
 //Wrist
 pros::Motor wrist(-11, pros::v5::MotorGears::green);
@@ -66,9 +66,10 @@ lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
 );
 //2.6, 0, 19 = ~0.5 off consistent and snappy
 // Angular PID controller
-lemlib::ControllerSettings angular_controller(2.46, // proportional gain (kP)
-                                              0.5, // integral gain (kI)
-                                              18, // derivative gain (kD)
+                                            lemlib::ControllerSettings angular_controller
+                                            (2.46, // proportional gain (kP): Multiplies the current error by a constant factor.
+                                              0, // integral gain (kI): Sums up the error over time.
+                                              20, // derivative gain (kD): Looks at how fast the error is changing
                                               3, // anti windup
                                               1, // small error range, in degrees
                                               100, // small error range timeout, in milliseconds
@@ -102,7 +103,7 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 // Game state variables
 int currentAuton = 0; // will only be changed in buttons.cpp
 char currentTeam = 'R'; // 'R' or 'B'
-char currentSide = 'L'; // 'R' or 'L'
+char currentSide = 'R'; // 'R' or 'L'
 char colorMode = 'S';     // 'S', 'W', 'C', or 'R'
 bool holdingOpponent = false;
 
@@ -132,7 +133,8 @@ std::array<float, 150> power;
 int winchTarget = -1;
 int lastWinchTarget = -1;
 int upHeight = 415000;
-int midHeight = 140000;
+int midHeight = 160000;
+int winchFirstAutonHeight = 103000;
 int downHeight = 0;
 int maxWinchUp = 127;
 int maxWinchDown = -60;
@@ -140,20 +142,26 @@ int maxWinchDown = -60;
 int armTarget = -1;
 int armDownHeight = 0;
 int armUpHeight = 800;
+int armFirstAutonHeight = 150;
+int armScoreAutonHeight = 150;
+int armReturnAuton = 150;
 
 int wristTarget = -1;
 int wristDownHeight = 0;
 int wristUpHeight = 800;
+int wristFirstAutonHeight = 700;
 int wristHoldingHeight = -300;
 
 
 int maxArmUp = 100;
-int maxArmDown = 30;
+int maxArmDown = 15;
 int currentArmMax = 200;
 
 int maxWristUp = 100;
-int maxWristDown = 25;
+int maxWristDown = 45;
 int currentWristMax = 200;
 
 ScoringState scoringState = NORMAL;
 ScoringState lastScoringState = NORMAL;
+
+bool ManualAdjust=false;

@@ -231,6 +231,22 @@ void motorTaskFunc(){
 
                 currentWristMax = maxWristDown;
                 currentArmMax = maxArmDown;
+                break;
+            case ScoringState::AUTON:
+                winchTarget = winchFirstAutonHeight;
+                armTarget = armFirstAutonHeight;
+                wristTarget = wristFirstAutonHeight;
+
+                currentWristMax = maxWristDown;
+                currentArmMax = maxArmDown;
+                break; 
+            case ScoringState::SCOREAUTON:
+                winchTarget = downHeight;
+                armTarget = armFirstAutonHeight;
+                wristTarget = wristFirstAutonHeight;
+
+                currentWristMax = maxWristDown;
+                currentArmMax = maxArmDown;
                 break; 
         }
 
@@ -253,7 +269,12 @@ void motorTaskFunc(){
         }
 
         arm.move_absolute(armTarget, currentArmMax);
-        wrist.move_absolute(wristTarget, currentWristMax);
+        if (!ManualAdjust)
+        {
+                 wrist.move_absolute(wristTarget, currentWristMax);
+   /* code */
+        }
+        
 
 
         pros::delay(20);
@@ -267,12 +288,13 @@ void initialize() {
     cascade.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     winch.set_position(0);
-
+    scoringState=ScoringState::NORMAL;
     pros::Task updateScreen(updateScreenTask);
     pros::Task lights(LightsTask);
     pros::Task motorTask(motorTaskFunc);
 
 
+    printf("touch works\n");
     pros::screen::touch_callback(getTouched, pros::E_TOUCH_PRESSED);
     pros::screen::touch_callback(getTouched, pros::E_TOUCH_HELD);
     pros::screen::touch_callback(getTouched, pros::E_TOUCH_RELEASED);
@@ -354,14 +376,33 @@ void opcontrol() {
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
             clawState = !clawState;
             claw.set_value(clawState);
+        }
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+            ManualAdjust = true;
+            wrist.move(-15);
+        } 
+        else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            ManualAdjust = true;
+            wrist.move(15);
+        }
+        else {
+            if (ManualAdjust) {
+                wrist.move(0);            // Stop manual power
+                wrist.tare_position();    // Set current position to 0
 
+                // Command the motor to hold position 0 (its new target)
+                wrist.move_absolute(0, 100); 
+
+                ManualAdjust = false;
+            
+            }
         }
 
 
-    
 
         pros::delay(25); // Run for 20 ms then update
     }
 }
+
 
 //testing 33242342342

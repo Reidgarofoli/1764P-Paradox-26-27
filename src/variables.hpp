@@ -93,17 +93,21 @@ extern int lastWinchTarget;
 extern int upHeight;
 extern int midHeight;
 extern int downHeight;
+extern int winchFirstAutonHeight;
 extern int maxWinchUp;
 extern int maxWinchDown;
 
 extern int armTarget;
 extern int armDownHeight;
 extern int armUpHeight;
+extern int armFirstAutonHeight;
+extern int armScoreAutonHeight;
 
 extern int wristTarget;
 extern int wristDownHeight;
 extern int wristUpHeight;
 extern int wristHoldingHeight;
+extern int wristFirstAutonHeight;
 
 extern int maxArmDown;
 extern int maxArmUp;
@@ -119,8 +123,12 @@ enum ScoringState {
     MIDMID,
     GOINGDOWN,
     NORMAL,
-    DRIVING
+    DRIVING,
+    AUTON,
+    SCOREAUTON
 };
 
 extern ScoringState scoringState;
 extern ScoringState lastScoringState;
+
+extern bool ManualAdjust;

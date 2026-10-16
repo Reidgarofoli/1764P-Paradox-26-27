@@ -78,20 +78,58 @@ void runAuton(){
         switch (currentAuton){ // LEFT SIDE AUTONS
             case 0: // left 4
                 chassis.setPose(0,0,0);
-                scoringState = ScoringState::DRIVING;
-                chassis.moveToPoint(0, 10, 1500, {.forwards=true, .minSpeed=30}, false);
-                chassis.moveToPoint(0, -7, 1000, {.forwards=false, .minSpeed=30}, false);
-                chassis.moveToPoint(0, 10, 1500, {.forwards=true, .minSpeed=30}, false);
-                chassis.moveToPoint(0, -7, 1500, {.forwards=false, .minSpeed=30}, false);
-                chassis.moveToPoint(0, 15, 1500, {.forwards=true}, false);
-                chassis.turnToHeading(90, 1000, {}, false);
-                chassis.moveToPose(17, 16, 90, 1500, {.forwards=true, .lead=0.1}, false);
-                scoringState = ScoringState::NORMAL;
-                pros::delay(300);
+                chassis.moveToPoint(0, 8, 1000, {.forwards=true, .minSpeed=60}, false);
+                chassis.moveToPoint(0, -7, 500, {.forwards=false, .minSpeed=60}, false);
+                chassis.moveToPoint(0, 6, 1000, {.forwards=true, .minSpeed=60}, false);
+                chassis.moveToPoint(0, -7, 800, {.forwards=false, .minSpeed=60}, false);
+                chassis.setPose(0,0,0);
+                chassis.moveToPoint(0, 17, 1000, {.forwards=true}, false);//score toggle our color
+                chassis.turnToHeading(90, 1000, {}, true);
+                scoringState = ScoringState::AUTON;
+                chassis.moveToPose(20, 20, 90, 1500, {.forwards=true, .lead=0.1}, false);//drive into alliance goal
+               chassis.setPose(20,20,90);
+                pros::delay(100);
+                scoringState = ScoringState::SCOREAUTON;
+                pros::delay(800);
                 clawState = true;
                 claw.set_value(clawState);
                 pros::delay(500);
-                chassis.moveToPoint(0, 15, 1500, {.forwards=false}, false);
+                scoringState = ScoringState::AUTON;
+                chassis.moveToPoint(0, 18, 1500, {.forwards=false}, false);//back up out of alliance goal
+                scoringState = ScoringState::NORMAL;
+                chassis.turnToHeading(45, 1000, {}, false);
+                chassis.moveToPose(24.8, 40.8, 45, 2500, {.forwards=true, .lead=.7, .minSpeed=15, .earlyExitRange=1}, false);//go to pin/cup on quad line
+                pros::delay(500);
+                clawState = false;
+                claw.set_value(clawState);
+                pros::delay(300);
+                scoringState = ScoringState::LOWHIGH;
+                chassis.turnToPoint(25, 28, 1000, {}, false);
+                chassis.moveToPoint(29, 26, 1500, {.forwards=true, .minSpeed=30}, false);
+                scoringState = ScoringState::GOINGDOWN;//score it 
+                pros::delay(1000);
+                clawState = true;
+                claw.set_value(clawState);
+                pros::delay(500);
+                chassis.moveToPoint(23, 38, 1500, {.forwards=false, .minSpeed=30}, false);//back up out of alliance goal
+            //     chassis.turnToHeading(135, 1000, {}, false);
+            //   chassis.moveToPose(49, 17,135, 2500, {.forwards=true, .lead=0.7, .minSpeed=15, .earlyExitRange=1}, false);//go to 2nd pin/cup on quad line
+            //      pros::delay(500);
+            //     clawState = false;
+            //     claw.set_value(clawState);
+            //     pros::delay(800);
+            //     scoringState = ScoringState::HIGHHIGH;//up for scoring
+            //     chassis.turnToHeading(270, 1000, {}, false);
+            //     chassis.moveToPose(22, 17, 270, 1500, {.forwards=true, .minSpeed=30}, false);
+            //     pros::delay(100);
+            //     scoringState = ScoringState::LOWHIGH;//score it
+            //     pros::delay(1500);
+            //     clawState = true;
+            //     claw.set_value(clawState);
+            //     chassis.moveToPoint(45, 19, 1500, {.forwards=false, .minSpeed=30}, false);//back up out of alliance goal
+             
+
+
                 break;
 
             case 1: // split
@@ -117,23 +155,59 @@ void runAuton(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     } else if (currentSide == 'R'){ // RIGHT SIDE AUTONS
         switch (currentAuton){
             case 0:
-                chassis.setPose(0,0,90);
+                chassis.setPose(0,0,0);
+                chassis.moveToPoint(0, 8, 1000, {.forwards=true, .minSpeed=60}, false);
+                chassis.moveToPoint(0, -7, 500, {.forwards=false, .minSpeed=60}, false);
+                chassis.moveToPoint(0, 6, 1000, {.forwards=true, .minSpeed=60}, false);
+                chassis.moveToPoint(0, -7, 800, {.forwards=false, .minSpeed=60}, false);
+                chassis.setPose(0,0,0);
+                chassis.moveToPoint(0, 17, 1000, {.forwards=true}, false);//score toggle our color
+                chassis.turnToHeading(-90, 1000, {}, true);
+                scoringState = ScoringState::AUTON;
+                chassis.moveToPose(-20, 17,-90, 1500, {.forwards=true, .lead=0.1}, false);//drive into alliance goal
+                pros::delay(100);
+                scoringState = ScoringState::SCOREAUTON;
+                pros::delay(800);
+                clawState = true;
+                claw.set_value(clawState);
+                pros::delay(500);
+                scoringState = ScoringState::AUTON;
+                chassis.moveToPoint(0, 15, 1500, {.forwards=false}, false);//back up out of alliance goal
+                scoringState = ScoringState::NORMAL;
+                chassis.turnToHeading(-45, 1000, {}, false);
+                chassis.moveToPose(-23.5, 37, -45, 2500, {.forwards=true, .lead=.7, .minSpeed=15, .earlyExitRange=1}, false);//go to pin/cup on quad line
+                pros::delay(500);
+                clawState = false;
+                claw.set_value(clawState);
+                pros::delay(300);
+                scoringState = ScoringState::LOWHIGH;
+                chassis.turnToPoint(-23, 25, 1000, {}, false);
+                chassis.moveToPoint(-23, 20, 1500, {.forwards=true, .minSpeed=30}, false);
+                scoringState = ScoringState::GOINGDOWN;//score it 
+                pros::delay(1000);
+                clawState = true;
+                claw.set_value(clawState);
+                pros::delay(500);
+                chassis.moveToPoint(-23, 35, 1500, {.forwards=false, .minSpeed=30}, false);//back up out of alliance goal
+            //     chassis.turnToHeading(-135, 1000, {}, false);
+            //   chassis.moveToPose(-49, 17,-135, 2500, {.forwards=true, .lead=0.7, .minSpeed=15, .earlyExitRange=1}, false);//go to 2nd pin/cup on quad line
+            //      pros::delay(500);
+            //     clawState = false;
+            //     claw.set_value(clawState);
+            //     pros::delay(800);
+            //     scoringState = ScoringState::HIGHHIGH;//up for scoring
+            //     chassis.turnToHeading(-270, 1000, {}, false);
+            //     chassis.moveToPose(-22, 17, -270, 1500, {.forwards=true, .minSpeed=30}, false);
+            //     pros::delay(100);
+            //     scoringState = ScoringState::LOWHIGH;//score it
+            //     pros::delay(1500);
+            //     clawState = true;
+            //     claw.set_value(clawState);
+            //     chassis.moveToPoint(-45, 19, 1500, {.forwards=false, .minSpeed=30}, false);//back up out of alliance goal
+        
                 break;
             case 1:
                 chassis.setPose(0,0,0);

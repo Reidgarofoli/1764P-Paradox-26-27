@@ -9,22 +9,20 @@ extern Scene TempsScreenScene;
 extern Scene DebugScreenScene;
 extern Scene HomeScreenScene;
 std::vector<std::string> leftAutonNames = {
-    "3 alliance goal(right) ",
-    "split",
-    "7 sit",
-    "7 wing",
-    "3-4+sit"
+    "left 3 ",
+    "dont hit this",
+    "dont hit this",
+    "dont hit this",
 };
 ScrollableList leftAutonList = {
     0,
     0
 };
 std::vector<std::string> rightAutonNames = {
-    "awp",
-    "4 wing",
-    "split",
-    "7 sit",
-    "7 wing",
+    "right 3",
+    "dont hit this",
+    "dont hit this",
+    "dont hit this",
 };
 ScrollableList rightAutonList = {
     0,
