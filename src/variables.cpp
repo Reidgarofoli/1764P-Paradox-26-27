@@ -55,9 +55,9 @@ lemlib::OdomSensors sensors(&left_tracking, // vertical tracking wheel 1, set to
 //8 0 16.  2:53 jan 1
 // Lateral PID controller
 // last pid was 8.7, 0, 37
-lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
+lemlib::ControllerSettings lateral_controller(4, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              96, // derivative gain (kD)
+                                              0, // derivative gain (kD)
                                               0, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -68,10 +68,10 @@ lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
 //2.6, 0, 19 = ~0.5 off consistent and snappy
 // Angular PID controller
                                             lemlib::ControllerSettings angular_controller
-                                            (2.46, // proportional gain (kP): Multiplies the current error by a constant factor.
+                                            ( 1, // proportional gain (kP): Multiplies the current error by a constant factor.
                                               0, // integral gain (kI): Sums up the error over time.
-                                              20, // derivative gain (kD): Looks at how fast the error is changing
-                                              3, // anti windup
+                                              0, // derivative gain (kD): Looks at how fast the error is changing
+                                              0, // anti windup
                                               1, // small error range, in degrees
                                               100, // small error range timeout, in milliseconds
                                               5, // large error range, in degrees
