@@ -1,11 +1,11 @@
 #include "variables.hpp"
 
 // Motor groups - 5, 6, 7, 8, 9, 10
-pros::MotorGroup ldrive({ -13, -5}, pros::v5::MotorGears::blue);
-pros::MotorGroup rdrive({19, 17}, pros::v5::MotorGears::blue);
+pros::MotorGroup ldrive({-14, -17}, pros::v5::MotorGears::blue);
+pros::MotorGroup rdrive({15, 18}, pros::v5::MotorGears::blue);
 
 // Inertial sensor
-pros::Imu imu(8);
+pros::Imu imu(2);
 
 // Drivetrain configuration
 lemlib::Drivetrain drivetrain(&ldrive, // left motor group
@@ -16,16 +16,17 @@ lemlib::Drivetrain drivetrain(&ldrive, // left motor group
                               2 // horizontal drift is 2 (for now)
 );
 //Cascade
-pros::MotorGroup cascade({15, -7}, pros::v5::MotorGears::blue); 
+pros::MotorGroup cascade({1, -19}, pros::v5::MotorGears::red);
 
-//Arm
-pros::MotorGroup arm({-1, 3}, pros::v5::MotorGears::green);
+//Intake
+pros::Motor intake(21, pros::v5::MotorGears::blue);
 
 //Wrist
-pros::Motor wrist(-11, pros::v5::MotorGears::green);
+pros::Motor wrist(13, pros::v5::MotorGears::green);
 
-//rotation sensor on winch
-pros::Rotation winch(-9); 
+//scoreMech
+pros::Motor scoreMech(-12, pros::v5::MotorGears::green);
+
 
 // Left tracking wheel
 lemlib::TrackingWheel left_tracking(
@@ -51,7 +52,7 @@ lemlib::OdomSensors sensors(&left_tracking, // vertical tracking wheel 1, set to
                             &imu // inertial sensor
 );
 
-//8 0 16.  2:53 jan 10
+//8 0 16.  2:53 jan 1
 // Lateral PID controller
 // last pid was 8.7, 0, 37
 lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
@@ -116,52 +117,36 @@ pros::adi::Led leftLEDStrip('d', 20);
 pros::adi::Led rightLEDStrip('e', 20);
 
 
-pros::adi::DigitalOut claw(6);
-bool clawState = false;
+pros::adi::DigitalOut toggle('h');
+bool toggleState = false;
 
 
 // UI scene system
 Scene currentScene = {nullptr, nullptr};
 
 bool updateScreen = true;
-int updateDelay = 50;
+int updateDelay = 200;
 int scoringSpeed = 127;
 
 std::array<float, 150> graph;
 std::array<float, 150> power;
 
-int winchTarget = -1;
-int lastWinchTarget = -1;
-int upHeight = 415000;
-int midHeight = 180000;
-int winchFirstAutonHeight = 103000;
-int downHeight = 0;
-int maxWinchUp = 127;
-int maxWinchDown = -60;
+// Intake state
+int intaking = 0; // 0 = not intaking, 1 = intaking, 2 = outtaking, 3 = scoring macro, 4 = spit out
+int lastIntaking;
 
-int armTarget = -1;
-int armDownHeight = 0;
-int armUpHeight = 800;
-int armFirstAutonHeight = 150;
-int armScoreAutonHeight = 150;
-int armReturnAuton = 150;
+bool intakeMacroGoing = false;
+bool runintake = false;
 
-int wristTarget = -1;
-int wristDownHeight = 0;
-int wristUpHeight = 800;
-int wristFirstAutonHeight = 700;
-int wristHoldingHeight = -300;
+ScoringState scoringState = NOTHING;
+ScoringState lastScoringState = NOTHING;
 
+int cascadeTarget = 0;
+int maxCascadeDown = -80;
+int maxCascadeUp = 127;
 
-int maxArmUp = 100;
-int maxArmDown = 15;
-int currentArmMax = 200;
+int intakingHeight = 450;
+int minScoringHeight = 1300;
 
-int maxWristUp = 100;
-int maxWristDown = 45;
-int currentWristMax = 200;
-
-ScoringState scoringState = NORMAL;
-ScoringState lastScoringState = NORMAL;
-
-bool ManualAdjust=false;
+int wristIntakingAngle = 150;
+int wristScoringAngle = 75;

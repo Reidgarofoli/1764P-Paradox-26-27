@@ -12,7 +12,6 @@ extern lemlib::Drivetrain drivetrain;
 extern lemlib::TrackingWheel left_tracking;
 extern lemlib::TrackingWheel right_tracking;
 extern lemlib::OdomSensors sensors;
-extern pros::Rotation winch;
 
 
 // PID controllers
@@ -36,21 +35,20 @@ extern pros::adi::Led leftLEDStrip;
 extern pros::adi::Led rightLEDStrip;
 
 
-extern pros::adi::DigitalOut claw;
-extern bool clawState;
-
-// Intake motors
-extern pros::Motor bottomIntake;
-extern pros::Motor topIntake;
-
-// Cascade
+//Cascade
 extern pros::MotorGroup cascade;
 
-// Arm
-extern pros::MotorGroup arm;
+//Intake
+extern pros::Motor intake;
 
 //Wrist
 extern pros::Motor wrist;
+
+//scoreMech
+extern pros::Motor scoreMech;
+
+extern pros::adi::DigitalOut toggle;
+extern bool toggleState;
 
 extern bool updateScreen;
 extern int updateDelay;
@@ -88,47 +86,27 @@ ASSET(Graph_png);
 extern std::array<float, 150> graph;
 extern std::array<float, 150> power;
 
-extern int winchTarget;
-extern int lastWinchTarget;
-extern int upHeight;
-extern int midHeight;
-extern int downHeight;
-extern int winchFirstAutonHeight;
-extern int maxWinchUp;
-extern int maxWinchDown;
-
-extern int armTarget;
-extern int armDownHeight;
-extern int armUpHeight;
-extern int armFirstAutonHeight;
-extern int armScoreAutonHeight;
-
-extern int wristTarget;
-extern int wristDownHeight;
-extern int wristUpHeight;
-extern int wristHoldingHeight;
-extern int wristFirstAutonHeight;
-
-extern int maxArmDown;
-extern int maxArmUp;
-extern int currentArmMax;
-
-extern int maxWristDown;
-extern int maxWristUp;
-extern int currentWristMax;
+extern bool intakeMacroGoing;
+extern bool runintake;
 
 enum ScoringState {
-    HIGHHIGH,
-    LOWHIGH,
-    MIDMID,
-    GOINGDOWN,
-    NORMAL,
-    DRIVING,
-    AUTON,
-    SCOREAUTON
+    SCORINGREADY,
+    INTAKING,
+    OUTTAKING,
+    TOGGLING,
+    SCORINGMACRO,
+    NOTHING
 };
 
 extern ScoringState scoringState;
 extern ScoringState lastScoringState;
 
-extern bool ManualAdjust;
+extern int cascadeTarget;
+extern int maxCascadeDown;
+extern int maxCascadeUp;
+
+extern int intakingHeight;
+extern int minScoringHeight;
+
+extern int wristIntakingAngle;
+extern int wristScoringAngle;

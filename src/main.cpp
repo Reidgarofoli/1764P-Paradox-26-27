@@ -8,8 +8,6 @@
 #include <fstream>
 #include <string>
 
-lemlib::PID winchPID(0.005, 0, 0, 10000, false); // PID for winch control
-
 void loadingScreenTask(){
     pros::delay(20);
     int time = 2000; // total time for loading screen in milliseconds
@@ -27,9 +25,6 @@ void loadingScreenTask(){
 
     pros::delay(20);
 }
-
- 
-
 void cycleChasingRainbow(pros::adi::Led *leftStrip, pros::adi::Led *rightStrip) {
     // code to cycle through the rainbow colors on the led strip
     static float hue = 0.0f;
@@ -169,113 +164,104 @@ void LightsTask(){
                 break;
         }
         leftLEDStrip.update();
-        pros::delay(25);
+        pros::delay(50);
         rightLEDStrip.update();
-        pros::delay(25);
+        pros::delay(50);
     }
 }
+float minval(float a, float b){
+    if (a < b) return a;
+    return b;
+}
+int getWristTargetFromCascade(int cascadeHeight){
+    float x1 = intakingHeight+50;
+    float y1 = wristIntakingAngle;
+
+    float x2 = minScoringHeight;
+    float y2 = wristScoringAngle;
+    // make it return the y of the line between these points between cascade height of x1 and x2
+    float m = (y2 - y1) / (x2 - x1);
+    float b = y1 - m * x1;
+
+    if (cascadeHeight < x1+50) return y1;
+    if (cascadeHeight > x2) return y2;
+
+    return m * cascadeHeight + b;
+}
+
+lemlib::PID cascadePID(0.5, 0.0, 0.0,      0.0, false);
+lemlib::PID wristPID(5, 0.0, 0.0,      0.0, false);
 
 void motorTaskFunc(){
     while (true){
-        switch (scoringState) {
-            case ScoringState::HIGHHIGH:
-                winchTarget = upHeight;
-                armTarget = armUpHeight;
-                wristTarget = wristUpHeight*0.8;
-
-                currentWristMax = maxWristDown;
-                currentArmMax = maxArmUp;
+        // int intaking = 0; // 0 = not intaking, 1 = intaking, 2 = toggling, 3 = scoring macro, 4 = outtaking, 5 = scoring ready, 6 = intake not spinning
+        switch (intaking) {
+            case 0:
+                cascadeTarget = 0;
+                intake.move(0);
+                scoreMech.move(0);
                 break;
-            case ScoringState::LOWHIGH:
-                winchTarget = upHeight;
-                armTarget = armDownHeight;
-                wristTarget = wristDownHeight;
             
-                if (lastScoringState == ScoringState::HIGHHIGH || lastScoringState == ScoringState::MIDMID) {
-                    currentWristMax = maxWristDown;
-                    currentArmMax = maxArmDown;
-                } else {
-                    currentWristMax = maxWristUp;
-                    currentArmMax = maxArmUp;
-                }
+            case 1:
+                cascadeTarget = intakingHeight;
+                intake.move(127);
+                scoreMech.move(127);
                 break;
-            case ScoringState::MIDMID:
-                // yet to be implemented
-                winchTarget = upHeight/1.8;
-                armTarget = armUpHeight/2;
-                wristTarget = wristUpHeight*0.8/2;
-
-                if (lastScoringState == ScoringState::HIGHHIGH) {
-                    currentWristMax = maxWristDown;
-                    currentArmMax = maxArmDown/3;
-                } else  {
-                    currentWristMax = maxWristUp;
-                    currentArmMax = maxArmUp;
-                }
-                break;
-            case ScoringState::GOINGDOWN:
-                winchTarget = downHeight;
-                break;
-            case ScoringState::NORMAL:
-                winchTarget = downHeight;
-                armTarget = armDownHeight;
-                wristTarget = wristDownHeight;
-
-                currentWristMax = maxWristDown;
-                currentArmMax = maxArmDown;
-                break;
-            case ScoringState::DRIVING:
-                winchTarget = downHeight;
-                armTarget = armDownHeight;
-                wristTarget = wristHoldingHeight;
-
-                currentWristMax = maxWristDown;
-                currentArmMax = maxArmDown;
-                break;
-            case ScoringState::AUTON:
-                winchTarget = winchFirstAutonHeight;
-                armTarget = armFirstAutonHeight;
-                wristTarget = wristFirstAutonHeight;
-
-                currentWristMax = maxWristDown;
-                currentArmMax = maxArmDown;
-                break; 
-            case ScoringState::SCOREAUTON:
-                winchTarget = downHeight;
-                armTarget = armFirstAutonHeight;
-                wristTarget = wristFirstAutonHeight;
-
-                currentWristMax = maxWristDown;
-                currentArmMax = maxArmDown;
-                break; 
-        }
-
-        lastScoringState = scoringState;
-
-        // winch controller
-        if (winchTarget != -1) {
-            int winchPos = winch.get_position();
-            int winchError = winchTarget - winchPos;
-            int winchOutput = winchPID.update(winchError);
-            // printf("winch pos: %d, target: %d, error: %d, output: %d\n", winchPos, winchTarget, winchError, winchOutput);
-            if (winchOutput > maxWinchUp) {
-                winchOutput = maxWinchUp;
-            } else if (winchOutput < maxWinchDown) {
-                winchOutput = maxWinchDown;
-            }
-            cascade.move(winchOutput);
-        } else {
-            cascade.move(0);
-        }
-
-        arm.move_absolute(armTarget, currentArmMax);
-        if (!ManualAdjust)
-        {
-                 wrist.move_absolute(wristTarget, currentWristMax);
-   /* code */
-        }
         
+            case 2:
+                cascadeTarget = 0;
+                intake.move(-127);
+                scoreMech.move(0);
+                break;
 
+            case 3: // scoring macro
+                intake.move(127);
+                scoreMech.move(-127);
+                break;
+
+            case 4:
+                intake.move(0);
+                scoreMech.move(0);
+                break;
+
+            case 5:
+                if (runintake) {
+                    scoreMech.move(127);
+                }
+                intake.move(0);
+                break;
+            case 6:
+                intake.move(0);
+                scoreMech.move(0);
+                break;
+            case 7:
+                if (runintake) {
+                    scoreMech.move(127);
+                }
+                intake.move(0);
+                break;
+        }
+
+        lastIntaking = intaking;
+        
+        int speed = cascadePID.update((cascadeTarget+50) - (cascade.get_position(0)+cascade.get_position(1))/2);
+        if (speed > maxCascadeUp) speed = maxCascadeUp;
+        if (speed < maxCascadeDown) speed = maxCascadeDown;
+        cascade.move(speed);
+
+        if (intaking == 0 || intaking == 3){
+            speed = wristPID.update(0 - wrist.get_position()/11); // hold wrist up
+            wrist.move(speed);
+        } else if (intaking == 1) {
+            speed = wristPID.update(getWristTargetFromCascade((cascade.get_position(0)+cascade.get_position(1))/2) - wrist.get_position()/11);
+            wrist.move(speed);
+        } else if (intaking == 5) {
+            int target = minval(getWristTargetFromCascade((cascade.get_position(0)+cascade.get_position(1))/2), wrist.get_position()/11);
+            speed = wristPID.update(target - wrist.get_position()/11);
+            wrist.move(speed);
+        } else {
+            wrist.brake();
+        }
 
         pros::delay(20);
     }
@@ -286,19 +272,17 @@ void initialize() {
 	chassis.calibrate(true);
     wrist.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     cascade.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    winch.set_position(0);
-    scoringState=ScoringState::NORMAL;
     pros::Task updateScreen(updateScreenTask);
     pros::Task lights(LightsTask);
     pros::Task motorTask(motorTaskFunc);
 
 
-    printf("touch works\n");
     pros::screen::touch_callback(getTouched, pros::E_TOUCH_PRESSED);
     pros::screen::touch_callback(getTouched, pros::E_TOUCH_HELD);
     pros::screen::touch_callback(getTouched, pros::E_TOUCH_RELEASED);
 
+
+    wrist.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 
@@ -353,51 +337,39 @@ void opcontrol() {
         // move the robot
         chassis.arcade(leftY, rightX, true, 0.6);
     
-
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-            scoringState = ScoringState::HIGHHIGH;
-        }
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
-            scoringState = ScoringState::LOWHIGH;
-        }
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
-            scoringState = ScoringState::MIDMID;
-        }
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
-            scoringState = ScoringState::GOINGDOWN;
-        }
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-            scoringState = ScoringState::NORMAL;
-        }
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-            scoringState = ScoringState::DRIVING;
+        // int intaking = 0; // 0 = not intaking, 1 = intaking, 2 = toggling, 3 = scoring macro, 4 = outtaking, 5 = scoring ready, 6 = intake not spinning
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+            intaking = 5;
+            cascadeTarget = cascade.get_position() + 300;
+            if (cascadeTarget > 5400) {
+                cascadeTarget = 5400;
+            }
+            runintake = true;
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+            intaking = 7;
+            cascadeTarget = cascade.get_position() - 300;
+            if (cascadeTarget < 0) {
+                cascadeTarget = 0;
+            }
+            runintake = true;
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+            intaking = 1;
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            intaking = 3;
+            cascadeTarget = cascade.get_position() + 300;
+            if (cascadeTarget > 5400) {
+                cascadeTarget = 5400;
+            }
+        } else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+            intaking = 0;
+        } else if (intaking != 0){
+            intaking = 6;
         }
 
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-            clawState = !clawState;
-            claw.set_value(clawState);
+            toggleState = !toggleState;
+            toggle.set_value(toggleState);
         }
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-            ManualAdjust = true;
-            wrist.move(-15);
-        } 
-        else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-            ManualAdjust = true;
-            wrist.move(15);
-        }
-        else {
-            if (ManualAdjust) {
-                wrist.move(0);            // Stop manual power
-                wrist.tare_position();    // Set current position to 0
-
-                // Command the motor to hold position 0 (its new target)
-                wrist.move_absolute(0, 100); 
-
-                ManualAdjust = false;
-            
-            }
-        }
-
 
 
         pros::delay(25); // Run for 20 ms then update
