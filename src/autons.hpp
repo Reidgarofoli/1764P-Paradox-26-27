@@ -54,7 +54,7 @@ void skillsAuton(){
 switch(currentAuton){
     case 0:
         break;
-
+       
     case 1:// big skills auto
         break;
 
@@ -78,6 +78,15 @@ void runAuton(){
         switch (currentAuton){ // LEFT SIDE AUTONS
             case 0: // left 4
                 chassis.setPose(0,0,0);
+                 chassis.setPose(0,0,0);
+        chassis.turnToHeading(90, 100000, {}, false);
+        pros::delay(500);
+        chassis.turnToHeading(180, 100000, {}, false);
+        pros::delay(500);
+        chassis.turnToHeading(270, 100000, {}, false);
+        pros::delay(500);
+        chassis.turnToHeading(0, 100000, {}, false);
+        pros::delay(500);
                 break;
 
             case 1: // split

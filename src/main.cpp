@@ -240,6 +240,10 @@ void motorTaskFunc(){
                 }
                 intake.move(0);
                 break;
+            case 8:
+                intake.move(-127);
+                scoreMech.move(0);
+                break;
         }
 
         lastIntaking = intaking;
@@ -328,7 +332,6 @@ void autonomous() {
 
 
 void opcontrol() {
-    // driveToGoal(-50, true);
     while (true) {
         // Arcade control scheme
         int leftY = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
@@ -337,7 +340,6 @@ void opcontrol() {
         // move the robot
         chassis.arcade(leftY, rightX, true, 0.6);
     
-        // int intaking = 0; // 0 = not intaking, 1 = intaking, 2 = toggling, 3 = scoring macro, 4 = outtaking, 5 = scoring ready, 6 = intake not spinning
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
             intaking = 5;
             cascadeTarget = cascade.get_position() + 300;
@@ -360,21 +362,19 @@ void opcontrol() {
             if (cascadeTarget > 5400) {
                 cascadeTarget = 5400;
             }
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) { // Spins backwards only while held
+            intaking = 8;
         } else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
             intaking = 0;
-        } else if (intaking != 0){
+        } else if (intaking != 0) { // Resets to 6 (stopped) as soon as UP is released
             intaking = 6;
         }
-
+      
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
             toggleState = !toggleState;
             toggle.set_value(toggleState);
         }
 
-
-        pros::delay(25); // Run for 20 ms then update
+        pros::delay(25);
     }
 }
-
-
-//testing 33242342342

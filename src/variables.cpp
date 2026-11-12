@@ -68,9 +68,9 @@ lemlib::ControllerSettings lateral_controller(4, // proportional gain (kP)
 //2.6, 0, 19 = ~0.5 off consistent and snappy
 // Angular PID controller
                                             lemlib::ControllerSettings angular_controller
-                                            ( 1, // proportional gain (kP): Multiplies the current error by a constant factor.
-                                              0, // integral gain (kI): Sums up the error over time.
-                                              0, // derivative gain (kD): Looks at how fast the error is changing
+                                            ( 1, // proportional gain (kP): Multiplies the current error by a constant factor.// big numebr is faster but could overshoot
+                                              0, // integral gain (kI): Sums up the error over time.//dont touch
+                                              0, // derivative gain (kD): Looks at how fast the error is changing// slow itself down 
                                               0, // anti windup
                                               1, // small error range, in degrees
                                               100, // small error range timeout, in milliseconds
@@ -104,7 +104,7 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 // Game state variables
 int currentAuton = 0; // will only be changed in buttons.cpp
 char currentTeam = 'R'; // 'R' or 'B'
-char currentSide = 'R'; // 'R' or 'L'
+char currentSide = 'L'; // 'R' or 'L'
 char colorMode = 'S';     // 'S', 'W', 'C', or 'R'
 bool holdingOpponent = false;
 
