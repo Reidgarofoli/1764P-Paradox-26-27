@@ -9,8 +9,8 @@ extern Scene TempsScreenScene;
 extern Scene DebugScreenScene;
 extern Scene HomeScreenScene;
 std::vector<std::string> leftAutonNames = {
-    "NEAR 2 ",
-    "NEAR preload",
+    "NEAR-3 stack",
+    "NEAR ",
 };
 ScrollableList leftAutonList = {
     0,
