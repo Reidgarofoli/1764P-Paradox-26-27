@@ -89,44 +89,72 @@ void runAuton(){
                 pros::delay(100);
                 chassis.moveToPoint(0, 12, 2000, {.forwards=false, .maxSpeed=60, .minSpeed=50}, false); // back off of toggle (if it over rotates the toggle then lower max and min speed each by 5 or ten)
                 chassis.turnToHeading(270, 2000, {}, false);
-                chassis.moveToPoint(14, 12, 2000, {.forwards=false, .maxSpeed=50}, false); // back up to alliance goal
+                chassis.moveToPoint(14, 12, 2000, {.forwards=false, .maxSpeed=100}, false); // back up to alliance goal//max speed was 50
                 
                 intaking = 4; // outtake everything and drop the preload
                 pros::delay(100);
 
                 intaking = 3; // scoring macro, lifts up wrist while outtaking
-                pros::delay(200);
+                pros::delay(100);//works at 200
                 intaking = 0;
 
-                chassis.moveToPoint(5, 12, 2000, {}, false);
+                chassis.moveToPoint(5, 12, 2000, {}, false);//added min speed at 70 but removed it cus missed
                 chassis.turnToHeading(180, 1000, {}, false); // could add a distance reset here but it works fine rn
                 toggleState = false;
                 toggle.set_value(toggleState);
-                chassis.moveToPose(18, 30, 225, 3000, {.forwards=false, .maxSpeed=70}, false); // backs up to the first standin pin
+                chassis.moveToPose(18, 30, 225, 3000, {.forwards=false, .maxSpeed=100}, false); // backs up to the first standin pin
                 
                 // stuff to grab the standing pin
                 intaking = 7; // lowering intake
                 cascadeTarget = 0; // cascade lower all the way down
                 runintake = true; // intake while lowering cascade
-                pros::delay(500);
+                pros::delay(400);
 
                 //raise lift and move away
                 intaking = 5;
                 cascadeTarget = 1500;
                 runintake = true;
                 chassis.turnToPoint(20, 14, 2000, {.forwards=false}, false);
-                chassis.moveToPoint(20, 14, 2000, {.forwards=false, .maxSpeed=70}, false);
+                chassis.moveToPoint(20, 14, 2000, {.forwards=false, .maxSpeed=100}, false);
 
                 // stuff to lower down pin
                 intaking = 7;
                 cascadeTarget = 650;
                 runintake = true;
-                pros::delay(500);
+                pros::delay(400);//works at 400
 
                 // drop pin
                 intaking = 3;
                 cascadeTarget = 800;
+                pros::delay(400);//works at 400
+
+                chassis.moveToPoint(20, 38, 2000, {.forwards=true, .maxSpeed=100}, false);
+                chassis.turnToHeading(-45, 2000, {}, false);
+                chassis.moveToPoint(39, 14, 2500, {.forwards=false, .maxSpeed=100}, false);
+
+//grab second pin
+                intaking = 7; // lowering intake
+                cascadeTarget = 0; // cascade lower all the way down
+                runintake = true; // intake while lowering cascade
+                pros::delay(400);//works at 400
+
+                intaking = 5;
+                cascadeTarget = 2400;
+                runintake = true;
+                chassis.moveToPoint(45,8, 2000, {.forwards=false, .maxSpeed=100}, false);
+                chassis.turnToHeading(90, 2000, {}, false);
+                chassis.moveToPoint(23, 14, 1200, {.forwards=false, .maxSpeed=120}, false);
+
+                  intaking = 4;
+                cascadeTarget = 1500;
+                runintake = true;
+                pros::delay(400);
+
+                // drop pin
+                intaking = 3;
+                cascadeTarget = 0;
                 pros::delay(300);
+
 
                 break;
 
