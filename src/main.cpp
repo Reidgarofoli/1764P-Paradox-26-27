@@ -220,8 +220,8 @@ void motorTaskFunc(){
                 break;
 
             case 4:
-                intake.move(0);
-                scoreMech.move(0);
+                intake.move(-127);
+                scoreMech.move(-127);
                 break;
 
             case 5:
@@ -256,12 +256,15 @@ void motorTaskFunc(){
         if (intaking == 0 || intaking == 3){
             speed = wristPID.update(0 - wrist.get_position()/11); // hold wrist up
             wrist.move(speed);
-        } else if (intaking == 1) {
+        } else if (intaking == 1) {// intaking while holding wrist horizontal
             speed = wristPID.update(getWristTargetFromCascade((cascade.get_position(0)+cascade.get_position(1))/2) - wrist.get_position()/11);
             wrist.move(speed);
         } else if (intaking == 5) {
             int target = minval(getWristTargetFromCascade((cascade.get_position(0)+cascade.get_position(1))/2), wrist.get_position()/11);
             speed = wristPID.update(target - wrist.get_position()/11);
+            wrist.move(speed);
+        } else if (intaking == 7) {
+            speed = wristPID.update(wristScoringAngle - wrist.get_position()/11);
             wrist.move(speed);
         } else {
             wrist.brake();

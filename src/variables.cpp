@@ -52,25 +52,24 @@ lemlib::OdomSensors sensors(&left_tracking, // vertical tracking wheel 1, set to
                             &imu // inertial sensor
 );
 
-//8 0 16.  2:53 jan 1
 // Lateral PID controller
-// last pid was 8.7, 0, 37
-lemlib::ControllerSettings lateral_controller(4, // proportional gain (kP)
-                                              0, // integral gain (kI)
-                                              0, // derivative gain (kD)
-                                              0, // anti windup
+lemlib::ControllerSettings lateral_controller(
+                                              8, // proportional gain (kP)
+                                              0.2, // integral gain (kI)
+                                              55, // derivative gain (kD)
+                                              2, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
                                               3, // large error range, in inches
-                                              300, // large error range timeout, in milliseconds
+                                              500, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
-//2.6, 0, 19 = ~0.5 off consistent and snappy
+
 // Angular PID controller
-                                            lemlib::ControllerSettings angular_controller
-                                            ( 1, // proportional gain (kP): Multiplies the current error by a constant factor.// big numebr is faster but could overshoot
+lemlib::ControllerSettings angular_controller(
+                                              5, // proportional gain (kP): Multiplies the current error by a constant factor.// big numebr is faster but could overshoot
                                               0, // integral gain (kI): Sums up the error over time.//dont touch
-                                              0, // derivative gain (kD): Looks at how fast the error is changing// slow itself down 
+                                              37, // derivative gain (kD): Looks at how fast the error is changing// slow itself down 
                                               0, // anti windup
                                               1, // small error range, in degrees
                                               100, // small error range timeout, in milliseconds
