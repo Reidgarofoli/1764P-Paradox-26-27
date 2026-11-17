@@ -50,8 +50,10 @@ inline void drawDebugScreen(){
     pros::screen::print(pros::E_TEXT_SMALL, 5, 52+24, "Y pos:%.2f", chassis.getPose().y);
     pros::screen::print(pros::E_TEXT_SMALL, 5, 64+24, "Angle:%.2f", chassis.getPose().theta);
 
-    pros::screen::print(pros::E_TEXT_SMALL, 5, 80+24, "winch:%d",   (int)cascade.get_position());
-    pros::screen::print(pros::E_TEXT_SMALL, 5, 92+24, "targt:%d",   cascadeTarget);
+    pros::screen::print(pros::E_TEXT_SMALL, 5, 80+24, "winch(1):%d",   (int)cascade.get_position(0));
+    pros::screen::print(pros::E_TEXT_SMALL, 5, 92+24, "winch(2):%d",   (int)cascade.get_position(1));
+    pros::screen::print(pros::E_TEXT_SMALL, 5, 104+24, "targt:%d",   cascadeTarget);
+
 
 
     // pros::screen::print(pros::E_TEXT_SMALL, 5, 80+24, "l:%.2f",   ldist.get()/25.4);

@@ -147,5 +147,5 @@ int maxCascadeUp = 127;
 int intakingHeight = 450;
 int minScoringHeight = 1300;
 
-int wristIntakingAngle = 150;
-int wristScoringAngle = 75;
+int wristIntakingAngle = 140;
+int wristScoringAngle = 65;

@@ -248,10 +248,11 @@ void motorTaskFunc(){
 
         lastIntaking = intaking;
         
-        int speed = cascadePID.update((cascadeTarget+50) - (cascade.get_position(0)+cascade.get_position(1))/2);
+        int speed = cascadePID.update((cascadeTarget) - (cascade.get_position(0)+cascade.get_position(1))/2);
         if (speed > maxCascadeUp) speed = maxCascadeUp;
         if (speed < maxCascadeDown) speed = maxCascadeDown;
         cascade.move(speed);
+        printf("cascade speed: %d, cascade target: %d, cascade position: %f\n", speed, cascadeTarget, (cascade.get_position(0)+cascade.get_position(1))/2);
 
         if (intaking == 0 || intaking == 3){
             speed = wristPID.update(0 - wrist.get_position()/11); // hold wrist up
@@ -345,14 +346,14 @@ void opcontrol() {
     
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
             intaking = 5;
-            cascadeTarget = cascade.get_position() + 300;
+            cascadeTarget = (cascade.get_position(0)+cascade.get_position(1))/2 + 300;
             if (cascadeTarget > 5400) {
                 cascadeTarget = 5400;
             }
             runintake = true;
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
             intaking = 7;
-            cascadeTarget = cascade.get_position() - 300;
+            cascadeTarget = (cascade.get_position(0)+cascade.get_position(1))/2 - 300;
             if (cascadeTarget < 0) {
                 cascadeTarget = 0;
             }
@@ -361,7 +362,7 @@ void opcontrol() {
             intaking = 1;
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             intaking = 3;
-            cascadeTarget = cascade.get_position() + 300;
+            cascadeTarget = (cascade.get_position(0)+cascade.get_position(1))/2 + 300;
             if (cascadeTarget > 5400) {
                 cascadeTarget = 5400;
             }
