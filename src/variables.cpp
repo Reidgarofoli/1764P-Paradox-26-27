@@ -101,7 +101,7 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 
 // Game state variables
-int currentAuton = 0; // will only be changed in buttons.cpp
+int currentAuton = 1; // will only be changed in buttons.cpp
 char currentTeam = 'R'; // 'R' or 'B'
 char currentSide = 'L'; // 'R' or 'L'
 char colorMode = 'S';     // 'S', 'W', 'C', or 'R'
@@ -141,11 +141,14 @@ ScoringState scoringState = NOTHING;
 ScoringState lastScoringState = NOTHING;
 
 int cascadeTarget = 0;
-int maxCascadeDown = -80;
+int maxCascadeDown = -127;
 int maxCascadeUp = 127;
 
-int intakingHeight = 450;
+int intakingHeight = 500;
 int minScoringHeight = 1300;
 
-int wristIntakingAngle = 140;
-int wristScoringAngle = 65;
+int wristIntakingAngle = 143;
+int wristScoringAngle = 68;
+
+bool dropping = false;
+bool droppingmacro = false;

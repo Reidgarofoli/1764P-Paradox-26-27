@@ -110,3 +110,6 @@ extern int minScoringHeight;
 
 extern int wristIntakingAngle;
 extern int wristScoringAngle;
+
+extern bool dropping;
+extern bool droppingmacro;

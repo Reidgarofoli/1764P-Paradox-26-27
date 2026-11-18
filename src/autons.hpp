@@ -158,8 +158,48 @@ void runAuton(){
 
                 break;
 
-            case 1: // split
-                chassis.setPose(0,0,0);
+            case 1: // left side 3 pin from ground
+                chassis.setPose(0,0,180);
+                
+                toggleState = true;
+                toggle.set_value(toggleState);
+                pros::delay(100);
+                chassis.moveToPoint(0, 12, 2000, {.forwards=false, .maxSpeed=80, .minSpeed=70}, false); // back off of toggle (if it over rotates the toggle then lower max and min speed each by 5 or ten)
+                toggleState = false;
+                toggle.set_value(toggleState);
+                intaking = 1; // intaking into the robot
+                chassis.turnToPoint(0, 35, 2000, {.minSpeed=20, .earlyExitRange=5}, false);
+                chassis.moveToPose(8, 38, 55, 2000, {.minSpeed=10, .earlyExitRange=1}, false); // grab cup from standing
+                chassis.turnToHeading(45, 1000, {.minSpeed=30, .earlyExitRange=5}, false);
+                chassis.turnToHeading(65, 1000, {.minSpeed=30, .earlyExitRange=5}, false);
+                chassis.turnToPoint(-18, 14, 2000, {.forwards=false, .minSpeed=20, .earlyExitRange=3}, false); // grab cup from standing
+                
+                // raise cascade and back up to score first cup + pin
+                intaking = 5;
+                cascadeTarget = 1700;
+                runintake = true;
+
+                chassis.moveToPoint(-19, 12, 2000, {.forwards=false, .minSpeed=10, .earlyExitRange=1}, false);
+                droppingmacro = true;
+                dropping = true;
+                ldrive.move(-40);
+                rdrive.move(-40);
+                pros::delay(300);
+                dropping = false;
+                pros::delay(600);
+
+                // after dropping pin, intake next pin
+                chassis.moveToPoint(-10, 12, 2000, {}, false);
+                chassis.turnToHeading(-55, 2000, {}, false);
+                intaking = 1;
+                chassis.moveToPose(-30, 30, -45, 2000, {.lead=0.2}, false);
+                chassis.moveToPoint(-10, 20, 2000, {.forwards=false}, false);
+                chassis.turnToHeading(95, 1000, {.minSpeed=30, .earlyExitRange=5}, false);
+                chassis.turnToHeading(115, 1000, {.minSpeed=30, .earlyExitRange=5}, false);
+                chassis.turnToHeading(105, 1000, {}, false);
+                chassis.moveToPose(-30, 30, 135, 2000, {.forwards=false}, false);
+
+
                 break;
 
             case 2:

@@ -51,6 +51,7 @@ inline void drawTempsScreen(){
 
     pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 140 + 0*11, "winch 1: %f", cascade.get_temperature(0));
     pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 140 + 1*11, "winch 2: %f", cascade.get_temperature(1));
+    pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 150 + 3*11, "score mech: %f", scoreMech.get_temperature());
     // pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 150 + 2*11, "arm 1: %f", arm.get_temperature(0));
     // pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 150 + 3*11, "arm 2: %f", arm.get_temperature(1));
     pros::screen::print(pros::text_format_e_t::E_TEXT_SMALL, 20, 150 + 4*11, "wrist: %f", wrist.get_temperature());

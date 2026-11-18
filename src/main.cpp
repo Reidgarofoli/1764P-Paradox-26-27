@@ -192,8 +192,34 @@ int getWristTargetFromCascade(int cascadeHeight){
 lemlib::PID cascadePID(0.5, 0.0, 0.0,      0.0, false);
 lemlib::PID wristPID(5, 0.0, 0.0,      0.0, false);
 
+int droppedHeight = -1;
+int raisingHeight = -1;
 void motorTaskFunc(){
     while (true){
+        if (dropping && droppingmacro){
+            cascadeTarget = (cascade.get_position(0)+cascade.get_position(1))/2 - 300;
+            if (cascadeTarget < 0){
+                cascadeTarget = 0;
+            }
+            intaking = 7;
+            runintake = true;
+        } else if (droppingmacro) {
+            if (droppedHeight == -1){
+                droppedHeight = (cascade.get_position(0)+cascade.get_position(1))/2;
+                raisingHeight = droppedHeight + 1500;
+                if (raisingHeight > 5400){
+                    raisingHeight = 5400;
+                }
+                cascadeTarget = raisingHeight;
+                intaking = 4;
+            } else if (abs(cascadeTarget - (cascade.get_position(0)+cascade.get_position(1))/2) < 100){
+                intaking = 0;
+                droppingmacro = false;
+            }
+        } else {
+            droppedHeight = -1;
+        }
+
         // int intaking = 0; // 0 = not intaking, 1 = intaking, 2 = toggling, 3 = scoring macro, 4 = outtaking, 5 = scoring ready, 6 = intake not spinning
         switch (intaking) {
             case 0:
@@ -256,7 +282,7 @@ void motorTaskFunc(){
 
         if (intaking == 0 || intaking == 3){
             speed = wristPID.update(0 - wrist.get_position()/11); // hold wrist up
-            wrist.move(speed);
+            wrist.move(speed/2);
         } else if (intaking == 1) {// intaking while holding wrist horizontal
             speed = wristPID.update(getWristTargetFromCascade((cascade.get_position(0)+cascade.get_position(1))/2) - wrist.get_position()/11);
             wrist.move(speed);
@@ -351,31 +377,29 @@ void opcontrol() {
                 cascadeTarget = 5400;
             }
             runintake = true;
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-            intaking = 7;
-            cascadeTarget = (cascade.get_position(0)+cascade.get_position(1))/2 - 300;
-            if (cascadeTarget < 0) {
-                cascadeTarget = 0;
-            }
-            runintake = true;
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
             intaking = 1;
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-            intaking = 3;
-            cascadeTarget = (cascade.get_position(0)+cascade.get_position(1))/2 + 300;
-            if (cascadeTarget > 5400) {
-                cascadeTarget = 5400;
-            }
+            droppingmacro = true;
+            dropping = true;
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) { // Spins backwards only while held
             intaking = 8;
         } else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
             intaking = 0;
-        } else if (intaking != 0) { // Resets to 6 (stopped) as soon as UP is released
+        } else if (intaking != 0 && !droppingmacro) { // Resets to 6 (stopped) as soon as UP is released
             intaking = 6;
         }
+
+        if (master.get_digital_new_release(pros::E_CONTROLLER_DIGITAL_R2)){
+            dropping = false;
+        }
+
       
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-            toggleState = !toggleState;
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+            toggleState = true;
+            toggle.set_value(toggleState);
+        } else {
+            toggleState = false;
             toggle.set_value(toggleState);
         }
 
