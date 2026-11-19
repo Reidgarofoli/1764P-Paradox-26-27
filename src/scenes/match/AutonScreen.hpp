@@ -10,7 +10,10 @@ extern Scene DebugScreenScene;
 extern Scene HomeScreenScene;
 std::vector<std::string> leftAutonNames = {
     "NEAR-3 stack",
-    "NEAR ",
+    "NEAR neut",
+    "near allaince",
+    "near neut v2-center line up",
+    "no mid- center line"
 };
 ScrollableList leftAutonList = {
     0,

@@ -228,7 +228,7 @@ void motorTaskFunc(){
                 scoreMech.move(0);
                 break;
             
-            case 1:
+            case 1://intake
                 cascadeTarget = intakingHeight;
                 intake.move(127);
                 scoreMech.move(127);
@@ -270,6 +270,10 @@ void motorTaskFunc(){
                 intake.move(-127);
                 scoreMech.move(0);
                 break;
+            case 9://purge
+                cascadeTarget = 400;
+                 intake.move(127);
+                scoreMech.move(-127);
         }
 
         lastIntaking = intaking;
