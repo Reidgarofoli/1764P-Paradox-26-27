@@ -363,8 +363,6 @@ void autonomous() {
 	runAuton();
 }
 
-
-
 void opcontrol() {
     while (true) {
         // Arcade control scheme

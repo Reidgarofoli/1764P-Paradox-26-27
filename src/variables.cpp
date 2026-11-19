@@ -144,7 +144,7 @@ int cascadeTarget = 0;
 int maxCascadeDown = -127;
 int maxCascadeUp = 127;
 
-int intakingHeight = 500;
+int intakingHeight = 550;
 int minScoringHeight = 1300;
 
 int wristIntakingAngle = 143;

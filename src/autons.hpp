@@ -218,7 +218,9 @@ void runAuton(){
                 toggle.set_value(toggleState);
 
                 chassis.turnToHeading(270, 2000, {.minSpeed=20, .earlyExitRange=5}, false);
-                chassis.moveToPoint(13.5, 10, 2000, {.forwards=false, .maxSpeed=100}, false); // back up to alliance goal//max speed was 50
+                chassis.moveToPoint(13.5, 10, 2000, {.forwards=false, .minSpeed=20, .earlyExitRange=1}, false); // back up to alliance goal//max speed was 50
+                ldrive.move(-40);
+                rdrive.move(-40);
                 
                 intaking = 4; // outtake everything and drop the preload
                 pros::delay(100);
@@ -229,15 +231,15 @@ void runAuton(){
                 
                 chassis.moveToPoint(10, 12, 2000, {.maxSpeed=80, .minSpeed=20, .earlyExitRange=3}, false); // back up to alliance goal//max speed was 50
                 intaking = 1;
-                chassis.moveToPoint(-15, 33, 2000, {.maxSpeed=80}, false);
-                chassis.swingToHeading(280, DriveSide::LEFT, 2000, {.maxSpeed=80}, false);
-                chassis.moveToPoint(-10, 20, 2000, {.forwards=false, .minSpeed=20, .earlyExitRange=2}, false);
-                chassis.moveToPoint(0, 40, 2000, {.minSpeed=20, .earlyExitRange=2}, false);
+                chassis.moveToPoint(-14.5, 32, 2000, {.maxSpeed=80}, false);
+                chassis.swingToHeading(305, DriveSide::LEFT, 2000, {.maxSpeed=80, .minSpeed=20, .earlyExitRange=5}, false);
+                chassis.moveToPoint(-10, 30, 2000, {.forwards=false, .minSpeed=20, .earlyExitRange=2}, false);
+                chassis.moveToPoint(1, 40, 2000, {.minSpeed=20, .earlyExitRange=2}, false);
                 chassis.turnToHeading(65, 1000, {.minSpeed=30, .earlyExitRange=5}, false);
                 chassis.turnToHeading(35, 1000, {.minSpeed=30, .earlyExitRange=5}, false);
 
                 // go back to alliance to drop the second pin
-                chassis.moveToPoint(15, 19, 2000, {.forwards=false}, true);
+                chassis.moveToPoint(19, 19, 2000, {.forwards=false}, true);
                 chassis.waitUntil(2);
                 intaking = 5;
                 cascadeTarget = 1500;
@@ -250,19 +252,20 @@ void runAuton(){
                 pros::delay(300);
                 dropping = false;
                 pros::delay(600);
-                chassis.moveToPoint(-5, 27, 2000, {.minSpeed=20, .earlyExitRange=3}, true);
-                chassis.waitUntil(3);
+                chassis.setPose(sin(chassis.getPose().theta * M_PI/180) * 7.5, cos(chassis.getPose().theta * M_PI/180) * 7.5, chassis.getPose().theta);
+
+                chassis.moveToPoint(-11, 9, 1000, {.minSpeed=20, .earlyExitRange=3}, false);
                 intaking = 1;
-                chassis.waitUntilDone();
-                chassis.moveToPoint(-18, 27, 2000, {}, false);
-                chassis.swingToHeading(315, DriveSide::RIGHT, 2000, {}, false);
-
-                chassis.moveToPoint(-15, 23, 2000, {.forwards=false}, false);
-                chassis.turnToHeading(130, 1000, {}, false);
-                intaking = 7;
-                cascadeTarget = 1400;
-                chassis.moveToPoint(-17, 28, 2000, {.forwards=false}, false);
-
+                chassis.moveToPoint(-43, 13, 1000, {}, false);
+                chassis.swingToHeading(320, DriveSide::RIGHT, 2000, {}, false);
+                chassis.moveToPoint(-33, 10, 1000, {.forwards=false}, false);
+                chassis.turnToHeading(140, 1000, {}, false);
+                
+                // raise cascade w/ pin and grab cup
+                intaking = 5;
+                cascadeTarget = 1500;
+                runintake = true;
+                chassis.moveToPoint(-39, 19, 2000, {.forwards=false, .maxSpeed=60}, false);
                 break;
 
             case 3://this is nuetral then allaince
