@@ -160,7 +160,6 @@ void runAuton(){
 
             case 1: // left side 3 pin from ground
                 chassis.setPose(0,0,180);
-                
                 toggleState = true;
                 toggle.set_value(toggleState);
                 pros::delay(100);
@@ -203,8 +202,67 @@ void runAuton(){
                 break;
 
             case 2:
-                // AUTON 3 - left side 7 sit
-                chassis.setPose(0,0,0);
+                // AUTON 3 - 4 pin from ground
+                chassis.setPose(0,0,180);
+
+                toggleState = true;
+                toggle.set_value(toggleState);
+                pros::delay(100);
+                chassis.moveToPoint(0, 10, 2000, {.forwards=false, .maxSpeed=60, .minSpeed=50}, false); // back off of toggle (if it over rotates the toggle then lower max and min speed each by 5 or ten)
+                
+                // stuff to make it put cascade all the way down while intaking
+                intaking = 7;
+                cascadeTarget = 0;
+                runintake = true;
+                toggleState = false;
+                toggle.set_value(toggleState);
+
+                chassis.turnToHeading(270, 2000, {.minSpeed=20, .earlyExitRange=5}, false);
+                chassis.moveToPoint(13.5, 10, 2000, {.forwards=false, .maxSpeed=100}, false); // back up to alliance goal//max speed was 50
+                
+                intaking = 4; // outtake everything and drop the preload
+                pros::delay(100);
+                
+                intaking = 3; // scoring macro, lifts up wrist while outtaking
+                pros::delay(100);//works at 200
+                intaking = 0;
+                
+                chassis.moveToPoint(10, 12, 2000, {.maxSpeed=80, .minSpeed=20, .earlyExitRange=3}, false); // back up to alliance goal//max speed was 50
+                intaking = 1;
+                chassis.moveToPoint(-15, 33, 2000, {.maxSpeed=80}, false);
+                chassis.swingToHeading(280, DriveSide::LEFT, 2000, {.maxSpeed=80}, false);
+                chassis.moveToPoint(-10, 20, 2000, {.forwards=false, .minSpeed=20, .earlyExitRange=2}, false);
+                chassis.moveToPoint(0, 40, 2000, {.minSpeed=20, .earlyExitRange=2}, false);
+                chassis.turnToHeading(65, 1000, {.minSpeed=30, .earlyExitRange=5}, false);
+                chassis.turnToHeading(35, 1000, {.minSpeed=30, .earlyExitRange=5}, false);
+
+                // go back to alliance to drop the second pin
+                chassis.moveToPoint(15, 19, 2000, {.forwards=false}, true);
+                chassis.waitUntil(2);
+                intaking = 5;
+                cascadeTarget = 1500;
+                runintake = true;
+                chassis.waitUntilDone();
+                droppingmacro = true;
+                dropping = true;
+                ldrive.move(-40);
+                rdrive.move(-40);
+                pros::delay(300);
+                dropping = false;
+                pros::delay(600);
+                chassis.moveToPoint(-5, 27, 2000, {.minSpeed=20, .earlyExitRange=3}, true);
+                chassis.waitUntil(3);
+                intaking = 1;
+                chassis.waitUntilDone();
+                chassis.moveToPoint(-18, 27, 2000, {}, false);
+                chassis.swingToHeading(315, DriveSide::RIGHT, 2000, {}, false);
+
+                chassis.moveToPoint(-15, 23, 2000, {.forwards=false}, false);
+                chassis.turnToHeading(130, 1000, {}, false);
+                intaking = 7;
+                cascadeTarget = 1400;
+                chassis.moveToPoint(-17, 28, 2000, {.forwards=false}, false);
+
                 break;
 
             case 3:

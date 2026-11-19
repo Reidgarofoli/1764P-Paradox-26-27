@@ -101,7 +101,7 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 
 // Game state variables
-int currentAuton = 1; // will only be changed in buttons.cpp
+int currentAuton = 2; // will only be changed in buttons.cpp
 char currentTeam = 'R'; // 'R' or 'B'
 char currentSide = 'L'; // 'R' or 'L'
 char colorMode = 'S';     // 'S', 'W', 'C', or 'R'
