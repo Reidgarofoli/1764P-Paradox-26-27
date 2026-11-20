@@ -222,7 +222,7 @@ void motorTaskFunc(){
 
         // int intaking = 0; // 0 = not intaking, 1 = intaking, 2 = toggling, 3 = scoring macro, 4 = outtaking, 5 = scoring ready, 6 = intake not spinning
         switch (intaking) {
-            case 0:
+            case 0://not intaking
                 cascadeTarget = 0;
                 intake.move(0);
                 scoreMech.move(0);
@@ -234,7 +234,7 @@ void motorTaskFunc(){
                 scoreMech.move(127);
                 break;
         
-            case 2:
+            case 2: // = toggling, 
                 cascadeTarget = 0;
                 intake.move(-127);
                 scoreMech.move(0);
@@ -245,18 +245,18 @@ void motorTaskFunc(){
                 scoreMech.move(-127);
                 break;
 
-            case 4:
+            case 4://outtaking,
                 intake.move(-127);
                 scoreMech.move(-127);
                 break;
 
-            case 5:
+            case 5://scoring ready
                 if (runintake) {
                     scoreMech.move(127);
                 }
                 intake.move(0);
                 break;
-            case 6:
+            case 6:// intake not spinning
                 intake.move(0);
                 scoreMech.move(0);
                 break;
