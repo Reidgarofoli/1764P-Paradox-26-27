@@ -306,7 +306,7 @@ void runAuton(){
                 chassis.moveToPose(-18,15,300,1000,{.forwards=false},false);
                   intaking = 5;
                 cascadeTarget = 800;
-                runintake = true;
+                runintake = true;//
             pros::delay (500);
                 chassis.moveToPose(6.5,5.5,300,2000,{.forwards=false,.minSpeed=60,},false);
                 pros::delay(500);
