@@ -5,7 +5,7 @@ pros::MotorGroup ldrive({-14, -17}, pros::v5::MotorGears::blue);
 pros::MotorGroup rdrive({15, 18}, pros::v5::MotorGears::blue);
 
 // Inertial sensor
-pros::Imu imu(2);
+pros::Imu imu(3);
 
 // Drivetrain configuration
 lemlib::Drivetrain drivetrain(&ldrive, // left motor group
@@ -61,7 +61,7 @@ lemlib::ControllerSettings lateral_controller(
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
                                               3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
+                                              400, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
@@ -101,9 +101,9 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 
 // Game state variables
-int currentAuton = 2; // will only be changed in buttons.cpp
+int currentAuton = 0; // will only be changed in buttons.cpp
 char currentTeam = 'R'; // 'R' or 'B'
-char currentSide = 'L'; // 'R' or 'L'
+char currentSide = 'R'; // 'R' or 'L'
 char colorMode = 'S';     // 'S', 'W', 'C', or 'R'
 bool holdingOpponent = false;
 

@@ -1,6 +1,11 @@
 #include "main.h"
 #include "buttons.hpp"
 
+
+void resetOnGoal(){
+    chassis.setPose(sin(chassis.getPose().theta * M_PI/180) * 7.5, cos(chassis.getPose().theta * M_PI/180) * 7.5, chassis.getPose().theta);
+}
+
 void trackAngle(){
     int i = 0;
     int max = graph.size();
@@ -269,7 +274,7 @@ void runAuton(){
                 break;
 
             case 3://this is nuetral then allaince
-                  chassis.setPose(0,0,180);//line up in middle
+                chassis.setPose(0,0,180);//line up in middle
                 toggleState = true;
                 toggle.set_value(toggleState);
                 pros::delay(100);
@@ -323,7 +328,7 @@ void runAuton(){
                 break;
             
             case 4://no mid line neut then allaince
-  chassis.setPose(0,0,180);//line up in middle
+                chassis.setPose(0,0,180);//line up in middle
                 toggleState = true;
                 toggle.set_value(toggleState);
                 pros::delay(100);
@@ -367,15 +372,78 @@ void runAuton(){
 
     } else if (currentSide == 'R'){ // RIGHT SIDE AUTONS
         switch (currentAuton){
-            case 0:
-                chassis.setPose(0,0,0);
+            case 0: // far side 4 pin (3 alliance 1 neutral)
+                chassis.setPose(0,0,180);
+
+                toggleState = true;
+                toggle.set_value(toggleState);
+                pros::delay(100);
+                chassis.moveToPoint(0, 11, 2000, {.forwards=false, .maxSpeed=70, .minSpeed=60}, false); // back off of toggle (if it over rotates the toggle then lower max and min speed each by 5 or ten)
+                
+                // stuff to make it put cascade all the way down while intaking
+                intaking = 7;
+                cascadeTarget = 0;
+                runintake = true;
+                toggleState = false;
+                toggle.set_value(toggleState);
+
+                chassis.turnToHeading(90, 2000, {.minSpeed=20, .earlyExitRange=5}, false);
+                chassis.moveToPoint(-13, 16, 2000, {.forwards=false, .minSpeed=20, .earlyExitRange=1}, false); // back up to alliance goal//max speed was 50
+                ldrive.move(-40);
+                rdrive.move(-40);
+                
+                intaking = 4; // outtake everything and drop the preload
+                pros::delay(100);
+                
+                intaking = 3; // scoring macro, lifts up wrist while outtaking
+                pros::delay(100);//works at 200
+                intaking = 0;
+                resetOnGoal();
+
+                chassis.moveToPoint(14, 0, 2000, {.forwards=false, .minSpeed=20, .earlyExitRange=1}, false);
+
+                runintake = true;
+                intaking = 7;
+                cascadeTarget = 900;
+
+                chassis.turnToPoint(8, 14, 2000, {.forwards=false, .minSpeed=20, .earlyExitRange=5}, false);
+                chassis.moveToPoint(8, 14, 2000, {.forwards=false, .minSpeed=20, .earlyExitRange=2}, false);
+                chassis.moveToPoint(4, 18, 2000, {.forwards=false, .maxSpeed=70}, false);
+
+                runintake = true;
+                intaking = 7;
+                cascadeTarget = 0;
+                pros::delay(400);
+                
+                runintake = true;
+                intaking = 7;
+                cascadeTarget = 1700;
+                pros::delay(200);
+
+                chassis.turnToPoint(0, 7, 2000, {.forwards=false, .minSpeed=20, .earlyExitRange=4}, false);
+                chassis.moveToPoint(0, 7, 2000, {.forwards=false}, false);
+
+                droppingmacro = true;
+                dropping = true;
+                ldrive.move(-40);
+                rdrive.move(-40);
+                pros::delay(200);
+                dropping = false;
+                pros::delay(500);
+
+                resetOnGoal();
+
+                
+
+
+
+
                 break;
             case 1:
                 chassis.setPose(0,0,0);
-                pros::delay(500);
                 break;
             case 2:
-                chassis.setPose(0,0,90);
+                chassis.setPose(0,0,0);
                 break;
             case 3:
                 chassis.setPose(0,0,0);
