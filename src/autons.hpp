@@ -433,7 +433,9 @@ void runAuton(){
 
                 resetOnGoal();
 
-                
+                chassis.moveToPoint(0, 15, 2000, {.forwards=false, .minSpeed=20, .earlyExitRange=2}, false);
+                chassis.turnToPoint(20, 4, 2000, {.forwards=false, minSpeed=20, .earlyExitRange=5}, false);
+                chassis.moveToPoint(20, 4, 2000, {.forwards=false}, false);
 
 
 
