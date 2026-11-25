@@ -9,19 +9,20 @@ extern Scene TempsScreenScene;
 extern Scene DebugScreenScene;
 extern Scene HomeScreenScene;
 std::vector<std::string> leftAutonNames = {
-    "NEAR-3 stack",
-    "NEAR neut",
-    "near allaince",
-    "near neut v2-center line up",
-    "no mid- center line"
+    "40 pts 3 ally 1 neutral",
+    "1-2 split intake",
+    "2-2 split intake",
+    "nuetral then allaince",
+    "neu+ally no mid"
 };
 ScrollableList leftAutonList = {
     0,
     0
 };
 std::vector<std::string> rightAutonNames = {
-    "FAR 2",
-    "FAR preload",
+    "3-1 split",
+    "2-2 split",
+    "1-2 split no mid"
 };
 ScrollableList rightAutonList = {
     0,
